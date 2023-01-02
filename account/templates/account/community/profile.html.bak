@@ -1,0 +1,1481 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                          
+                                            <li class="breadcrumb-item active">Community Profile</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Community Profile</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- Profile -->
+                                <div class="card bg-primary">
+                                    <div class="card-body profile-user-box">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <div class="avatar-lg">
+                                                            <img src={% if active_group.myassociation.profile_image %} "{{active_group.myassociation.profile_image.url}}"
+											{%else%}"{% static 'account/images/community.jpg' %}"
+											{%endif%}  alt="" class=" img-thumbnail">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div>
+                                                            <h4 class="mt-1 mb-1 text-white">{% if active_group%} {{active_group.myassociation.name}}{% endif %}</h4>
+                                                            <p class="font-13 text-white-50">{% if active_group%}
+															{%if active_group.myassociation.motto%}
+															{{active_group.myassociation.motto}}
+															{%else%}
+															Strong Together
+															{%endif%}
+															{% endif %}</p>
+    
+                                                            <ul class="mb-0 list-inline text-light">
+															<!--
+                                                                <li class="list-inline-item me-3">
+                                                                    <h5 class="mb-1">$ 0.00</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Total Revenue</p>
+                                                                </li>
+																--->
+                                                                <li class="list-inline-item">
+                                                                    <h5 class="mb-1">{{members_no}}</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Number of Members</p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col-->
+													<!-- Modal -->
+													<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+														<div class="modal-dialog modal-full-width modal-dialog-scrollable">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="staticBackdropLabel">EDIT ....</h5>
+																	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+																</div> <!-- end modal header -->
+																<div class="modal-body">
+																	<form  method = "POST" enctype ="multipart/form-data" action="{% url 'editassociation' %}" novalidate>
+								{% csrf_token %}
+												{% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+                        
+ <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "profile_image"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														</div>
+
+
+						<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "name"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "slogan"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+													
+													
+													
+													
+      <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "association_type"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "privacy"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->													
+													
+
+      <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "address"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "email"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->														
+      <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "phone"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "mobile"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->															
+													
+
+
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "currency"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "financial_year"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->	
+
+
+
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "youtube"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "facebook"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->	
+
+
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "twitter"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "languages"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->	
+
+																							 
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "mission"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "vission"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->	
+
+
+
+
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "first_goal"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "second_goal"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+
+
+
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "third_goal"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "head_office"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+        </div> <!-- end row -->
+
+
+
+<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "about_us"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "what_we_do"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+        </div> <!-- end row -->
+
+
+
+																						
+
+																						<div class="mb-3 text-center">
+																							<button class="btn btn-primary" type="submit"> Update {{active_group.myassociation.slogan }} </button>
+																						</div>
+
+																					</form>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+																	
+																</div> <!-- end modal footer -->
+															</div> <!-- end modal content-->
+														</div> <!-- end modal dialog-->
+													</div> <!-- end modal-->
+											{% if 'leaders_role' in request.session %}	
+											{% if request.session.leaders_role == "1" or request.session.leaders_role == "2"%}
+                                            <div class="col-sm-4">
+                                                <div class="text-center mt-sm-0 mt-3 text-sm-end">
+                                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		Edit {{active_group.myassociation.slogan}} Profile
+</button>
+                                                </div>
+												{%endif%}
+												{%endif%}
+                                            </div> <!-- end col-->
+                                        </div> <!-- end row -->
+
+                                    </div> <!-- end card-body/ profile-user-box-->
+                                </div><!--end profile/ card -->
+                            </div> <!-- end col-->
+                        </div>
+                        <!-- end row -->
+
+
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <!-- Personal-Information -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mt-0 mb-3">{% if active_group%} {{active_group.myassociation.slogan}}{% endif %}  Information</h4>
+                                        <p class="text-muted font-13">
+                                            {% if active_group%} {{active_group.myassociation.what_we_do}}{% endif %}
+                                        </p>
+
+                                        <hr>
+
+                                        <div class="text-start">
+                                            <p class="text-muted"><strong>Name :</strong> <span class="ms-2">
+											{% if active_group%} {{active_group.myassociation.name}}{% endif %}
+											</span></p>
+											
+											<p class="text-muted"><strong>Slogan :</strong> <span class="ms-2">
+											{% if active_group%} {{active_group.myassociation.slogan}}{% endif %}
+											</span></p>
+											
+											{% if active_group.myassociation.mobile%}
+                                            <p class="text-muted"><strong>Mobile :</strong><span class="ms-2">
+											 {{active_group.myassociation.mobile}}
+											</span></p>
+											{% endif %}
+											{% if active_group.myassociation.email%} 
+                                            <p class="text-muted"><strong>Email :</strong> <span class="ms-2">
+											{{active_group.myassociation.email}}
+											</span></p>
+                                            {% endif %}
+											{% if active_group.myassociation.address%} 
+                                            <p class="text-muted"><strong>Location :</strong> <span class="ms-2">
+											{{active_group.myassociation.address}}
+											</span></p>
+                                            {% endif %}
+											{% if active_group.myassociation.language%}
+                                            <p class="text-muted"><strong>Languages :</strong>
+                                                <span class="ms-2"> 
+												 {{active_group.myassociation.language}}
+												</span>
+                                            </p>
+											{% endif %}
+                                            <p class="text-muted mb-0" id="tooltip-container"><strong>Elsewhere :</strong>
+											{% if active_group.myassociation.facebook%}
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Facebook"><i class="mdi mdi-facebook"></i></a>
+                                             {% endif %}   
+											{% if active_group.myassociation.twitter%} 
+												<a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Twitter"><i class="mdi mdi-twitter"></i></a>
+                                            {% endif %}   
+											{% if active_group.myassociation.youtube%}
+												<a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="YouTube"><i class="mdi mdi-youtube"></i></a>
+                                            {%endif%}
+											</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Personal-Information -->
+								{%if active_group.myassociation.phone%}
+                                <!-- Toll free number box-->
+                                <div class="card text-white bg-info overflow-hidden">
+                                    <div class="card-body">
+                                        <div class="toll-free-box text-center">
+                                            <h4> <i class="mdi mdi-deskphone"></i> Call Us : {{active_group.myassociation.phone}}</h4>
+                                        </div>
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                                <!-- End Toll free number box-->
+								{%endif%}
+                                <!-- Messages-->
+                               
+
+                            </div> <!-- end col-->
+
+                            <div class="col-xl-8">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="card tilebox-one">
+                                            <div class="card-body">
+                                                <i class="dripicons-basket float-end text-muted"></i>
+                                                <h6 class="text-muted text-uppercase mt-0">Orders</h6>
+                                                <h2 class="m-b-20">1,587</h2>
+                                                <span class="badge bg-primary"> +11% </span> <span class="text-muted">From previous period</span>
+                                            </div> <!-- end card-body
+                                        </div> <!--end card
+                                    </div><!-- end col 
+
+                                    <div class="col-sm-4">
+                                        <div class="card tilebox-one">
+                                            <div class="card-body">
+                                                <i class="dripicons-box float-end text-muted"></i>
+                                                <h6 class="text-muted text-uppercase mt-0">Revenue</h6>
+                                                <h2 class="m-b-20">$<span>46,782</span></h2>
+                                                <span class="badge bg-danger"> -29% </span> <span class="text-muted">From previous period</span>
+                                            </div> <!-- end card-body
+                                        </div> <!--end card
+                                    </div><!-- end col
+
+                                    <div class="col-sm-4">
+                                        <div class="card tilebox-one">
+                                            <div class="card-body">
+                                                <i class="dripicons-jewel float-end text-muted"></i>
+                                                <h6 class="text-muted text-uppercase mt-0">Product Sold</h6>
+                                                <h2 class="m-b-20">1,890</h2>
+                                                <span class="badge bg-primary"> +89% </span> <span class="text-muted">Last year</span>
+                                            </div> <!-- end card-body
+                                        </div> <!--end card
+                                    </div><!-- end col 
+
+                                </div>
+                                <!-- end row -->
+
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">About Us</h4>
+											<dl class="row mb-0">
+											{% if active_group.myassociation.vission%}
+												<dt class="col-sm-3">Vission</dt>
+												<dd class="col-sm-9">{{active_group.myassociation.vission}}</dd>
+											{%endif%}	
+											{% if active_group.myassociation.mission%}			
+												<dt class="col-sm-3">Mission</dt>
+												<dd class="col-sm-9">{{active_group.myassociation.mission}}</dd>
+											{%endif%}
+											{% if active_group.myassociation.first_goal%}
+												<dt class="col-sm-3">Our Goals</dt>
+												<dd class="col-sm-9">
+												{% if active_group.myassociation.first_goal%}
+													<p>{{active_group.myassociation.first_goal}}</p>
+												{% endif %}	
+													{% if active_group.myassociation.second_goal%}
+													<p>{{active_group.myassociation.second_goal}}</p>
+												{% endif %}	
+													{% if active_group.myassociation.third_goal%}
+													<p>{{active_group.myassociation.third_goal}}</p>
+												{% endif %}	
+												</dd>
+											{%endif%}	
+												{% if active_group.myassociation.about_us%}		
+												<dt class="col-sm-3 text-truncate">About {{active_group.myassociation.slogan}}</dt>
+												<dd class="col-sm-9">{{active_group.myassociation.about_us}}</dd>
+												{%endif%}	
+												
+											</dl>
+                                        
+										
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+								
+								
+								<div class="card">
+                                    <div class="card-body">
+									<div class="d-flex justify-content-between">
+										<h4 class="header-title mb-4">{{active_group.myassociation.slogan}} Leaders </h4>
+										<a href="{% url 'cleaders'  %}"><button type="button" class="btn btn-dark btn-rounded"><b>Set Leaders</b></button></a>
+										
+									</div>
+                                        
+									<div class="row">
+									{% if leaders %}
+									{% for leader in leaders %}
+									<div class="col-6 col-sm-4 col-md-3">
+										<div class="card rounded-top">
+											
+											<img src={% if leader.associationleader.member.profile_image%} "{{leader.associationleader.member.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%}
+											alt="image" class="img-fluid img-thumbnail mx-auto d-block rounded-circle" width="120"/>
+											<p class="text-center mb-0">{{leader.associationleader.member.user_p.user_name}}</p>
+											<p class="text-center text-success mb-1"><b>{% if leader.other_position %} {{leader.other_position}}{% endif %}</b></p>
+											<button type="button" onclick="member({{leader.associationleader.member.pk}})"class="btn btn-outline-info btn-rounded"> Contact Me</button>
+										</div>
+										
+										</div>
+										{% endfor %}
+								{% endif %}
+										
+										
+									
+										
+										
+										</div>
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+
+               
+{% block javascript %}
+<script>
+let message_send_btn = document.getElementById('send-button');
+let message_input = document.getElementById('message-input');
+
+function send_message(){
+	let message = message_input.value
+	console.log(message)
+	if (message === ''){
+		return;
+	}
+	message_input.value = ''
+	fetch("{% url 'cprofile' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			construt_message(message);
+		}
+	});
+}
+
+
+
+function member(id){
+	message = id
+	fetch("{% url 'member' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href= "{% url 'member' %}";;
+			}
+		}
+	});
+}
+
+
+
+
+function member(id){
+	message = id
+	fetch("{% url 'member' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href= "{% url 'member' %}";;
+			}
+		}
+	});
+}
+</script>
+{% endblock javascript %}        
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

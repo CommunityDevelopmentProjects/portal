@@ -1,0 +1,214 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                      
+                                            <li class="breadcrumb-item active">Public Communities</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Public Communities</h4>
+                                </div>
+                            </div>
+                        </div>      
+                        <!-- end page title -->
+
+
+
+  <!-- end row -->
+
+
+
+
+
+
+                          <div class="row g-1 infinite-container">
+						  
+                           
+							{% if allpublicassocs %}
+							{%for assoc in allpublicassocs%}
+							<div class="infinite-item col-lg-2 col-sm-3">
+                                <div class="card">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-4 col-sm-12 col-md-12">
+                                            <img src={% if assoc.profile_image %} "{{assoc.profile_image.url}}"
+											{%else%}"{% static 'account/images/community.jpg' %}"
+											{%endif%} class="card-img" alt="...">
+                                        </div>
+                                        <div class="col-8 col-sm-12 col-md-12">
+                                            <div class="card-body text-center">
+                                                <h5 style ="
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;"
+ class="card-text" class="card-title">{{assoc.name}}</h5>
+ {%if assoc.what_we_do%}
+                                                <p style ="
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;"
+ class="card-text">{{assoc.what_we_do}}</p>{%endif%}
+                                              
+											   {%if myassocs%}
+						
+						{% for myassoc in myassocs%}
+						
+						{% if assoc.id == myassoc.myassociation.id%}
+					<button type="button"  class="btn btn-success btn-sm">Joined</button>
+							<style>			  
+						#group{{assoc.id}}{
+						display:none;
+						}
+						</style>
+						{%else%}
+						
+						{%endif%}
+						
+						{% endfor %}
+						
+						{% endif %}
+						
+						
+											   <button type="button" id ="group{{assoc.id}}" onclick="join_assoc({{assoc.id}})" class="btn btn-info btn-sm">Join Us Now</button>
+											  <button type="button" id ="joined{{assoc.id}}" class="btn btn-success btn-sm d-none">Joined</button>
+                                            </div> <!-- end card-body-->
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col-->
+							{%endfor%}
+							{% else %}
+							<div class="card">
+                                    <div class="row g-0 align-items-center">
+                                        <h3 class="mt-2 text-center text-danger">Ooh No Community  Found</h3>
+											<p>Try Searching with Community"s Name or Community Professional eg "Carpenters", Address or any other Community details </p>
+										
+                                    </div> <!-- end row-->
+                                </div> <!-- end card-->
+							
+							
+							
+							
+							
+							
+							{%endif%}
+							
+							{% if allpublicassocs.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  
+										text-success" role="status"  href = "?{% relative_url page=allpublicassocs.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+                        </div>
+                        <!-- end row -->
+   
+
+
+
+
+                       
+                        
+                        
+                    </div> <!-- container -->
+{% endblock%} 
+
+               
+{% block javascript %}
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Community to Join...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchpublicassociation' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+let join_assoc = (id) => {
+
+	assoc = id
+	
+	fetch("{% url 'joinassociation' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+	
+		for(message of messages){
+			if (message.message == 'success'){
+				
+				let joined = "joined".concat(id)
+				let joined_button = document.getElementById(joined);
+				let join = "group".concat(id)
+				let join_button = document.getElementById(join);
+				
+				
+				joined_button.classList.remove('d-none');
+				
+				join_button.classList.add('d-none');
+			}else{
+			alert(message.message)
+			
+			}
+		}
+	});
+}
+
+</script>
+{% endblock javascript %}   
+
+                
+				

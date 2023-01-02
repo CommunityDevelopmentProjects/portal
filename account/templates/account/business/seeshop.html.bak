@@ -1,0 +1,678 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+        <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                       
+                                            <li class="breadcrumb-item active">{{business.business_name}}</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">{{business.business_name}}</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                        
+{%if business %}
+<!-- Modal -->
+
+
+
+
+
+
+
+                        <div class="row">
+                            
+ 
+ <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                                            <li class="nav-item">
+                                                <a href="#aboutme" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                                    Business Profile
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#timeline" data-bs-toggle="tab" aria-expanded="true" class="nav-link rounded-0 active">
+                                                    Products
+                                                </a>
+                                            </li>
+                                           
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane" id="aboutme">
+    
+                                                <div class="row">
+                            <div class="col-sm-12">
+                                <!-- Profile -->
+                                <div class="card bg-success">
+                                    <div class="card-body profile-user-box">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="row align-items-center">
+                                                   
+                                                        
+                                                           <div class="col-sm-4">
+                                                            <img src= {%if business.cover_image%}"{{business.cover_image.url}}"{%else%}"{% static 'account/images/open-business-sign.jpg' %}"{%endif%} alt="" class="w-100 img-thumbnail">
+                                                        </div>
+                                                        
+                                                    
+                                                    
+                                                        <div>
+                                                            <h4 class="mt-1 mb-1 text-white">{{business.business_name}}</h4>
+                                                            <p class="font-13 text-white-50"> {{business.business_slogan}}</p>
+    
+                                                            
+                                                        </div>
+                                                   
+                                                </div>
+                                            </div> <!-- end col-->
+
+                                            <div class="col-sm-4">
+                                                <div class="text-center mt-sm-0 mt-3 text-sm-end">
+                                                    <button type="button" class="btn btn-light">
+                                                        <i class="mdi mdi-account-edit me-1"></i> View Location
+                                                    </button>
+                                                </div>
+                                            </div> <!-- end col-->
+                                        </div> <!-- end row -->
+
+                                    </div> <!-- end card-body/ profile-user-box-->
+                                </div><!--end profile/ card -->
+								
+								
+								
+								
+                            </div> <!-- end col-->
+							
+							<div class="col-12">
+                                <!-- Personal-Information -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mt-0 mb-3">Business Information</h4>
+                                        <p class="text-muted font-13">
+                                            {{business.about_business}}
+                                        </p>
+
+                                        <hr>
+
+                                        <div class="text-start">
+                                            <p class="text-muted"><strong>Business Owner :</strong> <span class="ms-2">{{business.business_owner.full_name}}</span></p>
+
+                                            <p class="text-muted"><strong>Mobile :</strong><span class="ms-2">{{business.business_contacts}}</span></p>
+<!--
+                                            <p class="text-muted"><strong>Email :</strong> <span class="ms-2">coderthemes@gmail.com</span></p>
+-->
+                                            <p class="text-muted"><strong>Location :</strong> <span class="ms-2">{{business.business_address}}</span></p>
+
+											<p class="text-muted"><strong>Shipping Area :</strong> <span class="ms-2">{{business.shipping_area}}</span></p>
+
+                                            <p class="text-muted"><strong>Shipping Fee :</strong> <span class="ms-2">{{business.shipping_fee}}</span></p>
+<!-- 
+
+<!-- 
+                                            <p class="text-muted"><strong>Languages :</strong>
+                                                <span class="ms-2"> English, German, Spanish </span>
+                                            </p>
+                                            <p class="text-muted mb-0" id="tooltip-container"><strong>Elsewhere :</strong>
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Facebook"><i class="mdi mdi-facebook"></i></a>
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Twitter"><i class="mdi mdi-twitter"></i></a>
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Skype"><i class="mdi mdi-skype"></i></a>
+                                            </p>
+-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Personal-Information -->
+
+                                <!-- Toll free number box
+                                <div class="card text-white bg-success overflow-hidden">
+                                    <div class="card-body">
+                                        <div class="toll-free-box text-center">
+                                            <h4> <i class="mdi mdi-deskphone"></i> Toll Free : 1-234-567-8901</h4>
+                                        </div>
+                                    </div> <!-- end card-body
+                                </div> <!-- end card-->
+                                <!-- End Toll free number box-->
+
+                                <!-- Messages
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">Messages</h4>
+
+                                        <div class="inbox-widget">
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-2.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Tomaslau</p>
+                                                <p class="inbox-item-text">I've finished it! See you so...</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-3.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Stillnotdavid</p>
+                                                <p class="inbox-item-text">This theme is awesome!</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-4.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Kurafire</p>
+                                                <p class="inbox-item-text">Nice to meet you</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-5.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Shahedk</p>
+                                                <p class="inbox-item-text">Hey! there I'm available...</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-6.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Adhamdannaway</p>
+                                                <p class="inbox-item-text">This theme is awesome!</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                        </div> <!-- end inbox-widget 
+                                    </div> <!-- end card-body
+                                </div> <!-- end card-->
+
+                            </div> <!-- end col-->
+                        </div>
+                        <!-- end row -->
+                                            </div> <!-- end tab-pane -->
+                                            <!-- end about me section content -->
+    
+	
+	
+                                            <div class="tab-pane active show" id="timeline">
+    
+										
+                
+                                                <div class="row mb-2">
+                                            <div class="col-sm-12">
+											<ul class="list-group">
+											<h4>Our Product Categories</h4>
+		{% for category in categories %}
+	{% if category.business_category == 1%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Food and beverages
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 2%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Business and Finance
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 3%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Personal Care and Beauty
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 4%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Housing and Real Estate
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 5%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Automotive and Transport
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 6%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Home Appliances
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 7%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Agriculture
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 8%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Musical Instruments
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 9%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Shoe Repair and Maintence
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 10%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Clothing, Shoes and Jewery
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 11%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Entertainment
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 12%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Eletronics
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 13%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Health Care and Pharmacutical
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 14%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Sports
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 15%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Stationery
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 16%}
+    <li data-bs-toggle="modal" style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Chemicals and Materials
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 17%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Machinery And Spare Parts
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 18%}
+    <li data-bs-toggle="modal"  style="cursor:pointer;"  data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Decoration,Party and Wedding
+	</li>
+	{%endif%}
+	{%endfor%}
+	
+
+</ul>
+                                               
+                                            </div>
+                                           
+                                        </div>
+										
+                                       
+						
+	<div class="row g-2 infinite-container">
+									
+									{% if allproducts %}
+									<style>
+										#single-product{
+											transition: transform .4s;
+										}
+										#single-product:hover{
+											transform: scale(1.05);
+										}
+									</style>
+									{% for product in allproducts %}
+									<div id="single-product"class="infinite-item col-6 col-sm-4 col-md-3">
+										<div class="card rounded-top">
+											
+											<img onclick="Product({{product.pk}})" style="cursor:pointer;"src={% if product.image1%} "{{product.image1.url}}"
+											{%else%}"{% static 'account/images/product.jpg' %}"
+											{%endif%}
+											alt="image" class="img-fluid  mx-auto d-block w-100" />
+											<p class="px-2 mb-0"style=" text-overflow:ellipsis; font-size:13px;
+  overflow:hidden;
+  padding-bottom:0;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  " ><b>{{product.product_brand_name}}</b> (<span>{{product.product_generic_name}}</span>)</p>
+											
+				<h5 class="px-2 m-0">{% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%}{{product.product_price}}</h5>							
+				<del class="px-2 text-danger">{% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%}{{product.product_price}}</del>
+						
+						
+						{%if incart%}
+						
+						{% for cart in incart%}
+						
+						{% if cart.order_product.id == product.id%}
+					<button  type="button" class="btn btn-success btn-rounded text-white mt-2 p-0"><b><i class="mdi mdi-cart me-1 p-0"></i>Added to Cart</b></button>
+										
+							<style>			  
+						#addtocart-btn{{product.id}}{
+						display:none;
+						}
+						</style>
+						{%else%}
+						
+						{%endif%}
+						
+						{% endfor %}
+						
+						{% endif %}		
+											
+			<button id="addtocart-btn{{product.pk}}" onclick="AddtoCart({{product.pk}})"type="button" class="btn btn-warning btn-rounded text-white mt-2"><b><i class="mdi mdi-cart me-1"></i>Add to Cart</b></button>
+										
+										
+			<button  id="incart{{product.pk}}" type="button" class="d-none btn btn-success btn-rounded text-white mt-2 p-0"><b><i class="mdi mdi-cart me-1"></i>Added to Cart</b></button>
+													
+										
+										</div>
+										
+										</div>
+										{% endfor %}
+										{%else%}
+								<div class="card rounded-top">
+											<h3 class="text-center text-danger">Ooh No Product is Found</h3>
+											<p>Try Searching with Product"s Name  or any other product details </p>
+										
+										</div>
+								{% endif %}
+								
+								
+								
+							
+										{% if allproducts.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=allproducts.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+										
+									
+										
+										
+										</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+                                            </div>
+                                            <!-- end timeline content-->
+    
+                                            <!-- end settings content-->
+    
+                                        </div> <!-- end tab-content -->
+                                    </div> <!-- end card body -->
+                                </div> <!-- end card -->
+                            </div> <!-- end col -->
+                            <div class="col-xl-8">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+                             
+                                <!-- end row -->
+
+
+                               <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+
+						{%endif%}
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+{% endblock%} 
+
+               
+{% block javascript %}
+
+<script >
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+
+
+
+
+
+function Product(id){
+	message = id
+	
+	
+	fetch("{% url 'shopsess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+
+function Category(id){
+	message = id
+	fetch("{% url 'categorysess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				alert('success')
+			}
+		}
+	});
+}
+
+function DelProduct(id){
+	message = id
+	
+	
+	fetch("{% url 'deleteproductajax' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				
+			}
+		}
+	});
+	
+	
+	
+}
+
+function AddtoCart(id){
+	let addtocart_btnid = "addtocart-btn".concat(id)
+	let addtocart_btn = document.getElementById(addtocart_btnid);
+	let cart_count = document.getElementById("cart-count")
+	message = id
+	fetch("{% url 'addcart' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				count = parseInt(cart_count.innerHTML)
+				count +=1
+				cart_count.innerHTML =count
+				
+				let added = "incart".concat(id)
+				let added_btn = document.getElementById(added);
+				added_btn.classList.remove('d-none');
+				
+				addtocart_btn.classList.add('d-none');
+				
+			}
+		}
+	});
+}
+
+
+
+
+
+
+var limit = 3;
+$('input.assoc_check').on('click', function(evt) {
+	
+   if($(this).siblings(':checked').length >= limit) {
+       this.checked = false;
+   }
+});
+</script>
+<script>
+
+
+</script>
+ <!-- third party js -->
+        <script src="{% static 'account/js/vendor/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'account/js/vendor/dataTables.bootstrap5.js'%}"></script>
+        <script src="{% static 'account/js/vendor/dataTables.responsive.min.js'%}"></script>
+        <script src="{% static 'account/js/vendor/responsive.bootstrap5.min.js'%}"></script>
+        <script src="{% static 'account/js/vendor/dataTables.checkboxes.min.js'%}"></script>
+
+        <!-- third party js ends -->
+
+        <!-- demo app -->
+        <script src="{% static 'account/js/pages/demo.products.js'%}"></script>
+{% endblock javascript %}

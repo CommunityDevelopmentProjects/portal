@@ -1,0 +1,2434 @@
+﻿{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+        <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            
+                                            <li class="breadcrumb-item active">My Profile </li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">My Profile</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <img src={% if active_user.profile_image%} "{{active_user.profile_image.url}}"{%else%}"{% static 'account/images/profile.png' %}"{%endif%} class="rounded-circle w-50 img-thumbnail" alt="profile-image">
+										{% if request.user.is_authenticated %}
+                                        <h4 class="mb-0 mt-2">{{request.user.user_name}}</h4>
+										{% endif %}
+                                        <p class="text-muted font-14">{{request.user.phone_number}}</p>
+<!--
+                                        <button type="button" class="btn btn-success btn-sm mb-2">Follow</button>
+                                        <button type="button" class="btn btn-danger btn-sm mb-2">Message</button>
+-->
+                                        <div class="text-start mt-3">
+                                            <h4 class="font-13 text-uppercase">About Me :</h4>
+											
+                                            <p class="text-muted font-13 mb-3">
+                                                
+													{% if active_user.about_me%}
+														{{active_user.about_me}}
+													{%else%}
+													Tell us a little about you
+													{% endif %}
+												
+                                            </p>
+											{% if active_user.full_name%}
+                                            <p class="text-muted mb-2 font-13"><strong>Full Name :</strong> <span class="ms-2">
+											{{active_user.full_name}}</span></p>
+											{% endif%}
+											
+											{% if active_user.mobile%}
+                                            <p class="text-muted mb-2 font-13"><strong>Mobile :</strong><span class="ms-2">
+											{{active_user.mobile}}</span></p>
+											{%endif%}
+											
+											{% if active_user.phone%}
+                                            <p class="text-muted mb-2 font-13"><strong>Phone :</strong><span class="ms-2">
+											{{active_user.phone}}</span></p>
+											{%endif%}
+											
+											{% if active_user.email%}
+                                            <p class="text-muted mb-2 font-13"><strong>Email :</strong> <span class="ms-2 ">
+											{{active_user.email}}</span></p>
+											{% endif %}
+											
+											{% if active_user.address%}
+                                            <p class="text-muted mb-1 font-13"><strong>Location :</strong> <span class="ms-2">
+											{{active_user.address}}</span></p>
+											{% endif %}
+											
+											{% if active_user.languages%}
+                                            <p class="text-muted mb-1 font-13"><strong>Languages :</strong> <span class="ms-2">
+											{{active_user.languages}}</span></p>
+											{% endif %}
+											
+											{% if active_user.best_skill%}
+                                            <p class="text-muted mb-1 font-13"><strong>Best Skill:</strong> <span class="ms-2">
+											{{active_user.best_skill}}</span></p>
+											{% endif %}
+											
+											{% if active_user.employment%}
+                                            <p class="text-muted mb-1 font-13"><strong>Empolyement :</strong> <span class="ms-2">
+											{{active_user.employment}}</span></p>
+											{% endif %}
+											
+											{% if active_user.status%}
+                                            <p class="text-muted mb-1 font-13"><strong>Status :</strong> <span class="ms-2">
+											{{active_user.status}}</span></p>
+											{% endif %}
+											
+										</div>
+
+                                        <ul class="social-list list-inline mt-3 mb-0">
+										{% if active_user.facebook%}
+                                            
+                                            <li class="list-inline-item">
+                                                <a href="{{active_user.facebook}}" class="social-list-item border-primary text-primary"><i class="mdi mdi-facebook"></i></a>
+                                            </li>
+										{%endif%}
+										{% if active_user.instagram%}
+                                            <li class="list-inline-item">
+                                                <a href="{{active_user.instagram}}" class="social-list-item border-danger text-danger"><i class="mdi mdi-instagram"></i></a>
+                                            </li>
+										{%endif%}
+										{% if active_user.twitter%}
+                                            <li class="list-inline-item">
+                                                <a href="{{active_user.twitter}}" class="social-list-item border-info text-info"><i class="mdi mdi-twitter"></i></a>
+                                            </li>
+										{%endif%}	
+										{% if active_user.tiktok%}
+                                            <li class="list-inline-item">
+                                                <a href="{{active_user.tiktok}}" class="social-list-item border-secondary text-secondary"><i class="mdi mdi-tiktok"></i></a>
+                                            </li>
+										{%endif%}	
+                                        </ul>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+
+                                <!-- Messages-->
+                               <!-- end card-->
+
+                            </div> <!-- end col-->
+
+                            <div class="col-xl-8 col-lg-7">
+                                <div class="card">
+                                    <div class="card-body">
+									
+                                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                                            
+                                            
+                                            <li class="nav-item">
+                                                <a href="#settings" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                                    Edit Profile
+                                                </a>
+                                            </li>
+											<li class="nav-item">
+                                                <a href="#experience" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                                    Edit Experience
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane show active" id="aboutme">
+    
+                                                <h5 class="text-uppercase"><i class="mdi mdi-briefcase me-1"></i>
+                                                    Experience</h5>
+
+                                                <div class="timeline-alt pb-0">
+												{%if active_user.first_position%}
+                                                    <div class="timeline-item">
+                                                        <i class="mdi mdi-circle bg-info-lighten text-info timeline-icon"></i>
+                                                        <div class="timeline-item-info">
+                                                            <h5 class="mt-0 mb-1">
+															{%if active_user.first_position%}{{active_user.first_position}} {% endif %}
+															/{%if active_user.first_role%}{{active_user.first_role}} {% endif %}
+															</h5>
+                                                            <p class="font-14">
+															{%if active_user.first_company%}{{active_user.first_company}} {% endif %}
+															<span class="ms-2 font-12">
+															Year: {%if active_user.first_period%}{{active_user.first_period}} {% endif %}
+															</span></p>
+                                                            <p class="text-muted mt-2 mb-0 pb-3">
+															{%if active_user.first_role_description%}{{active_user.first_role_description}} {% endif %}
+															</p>
+                                                        </div>
+                                                    </div>
+												{% endif %}
+    
+												{%if active_user.second_position%}
+                                                    <div class="timeline-item">
+                                                        <i class="mdi mdi-circle bg-info-lighten text-info timeline-icon"></i>
+                                                        <div class="timeline-item-info">
+                                                            <h5 class="mt-0 mb-1">
+															{%if active_user.second_position%}{{active_user.second_position}} {% endif %}
+															/{%if active_user.second_role%}{{active_user.second_role}} {% endif %}
+															</h5>
+                                                            <p class="font-14">
+															{%if active_user.second_company%}{{active_user.second_company}} {% endif %}
+															<span class="ms-2 font-12">
+															Year: {%if active_user.second_period%}{{active_user.second_period}} {% endif %}
+															</span></p>
+                                                            <p class="text-muted mt-2 mb-0 pb-3">
+															{%if active_user.second_role_description%}{{active_user.second_role_description}} {% endif %}
+															</p>
+                                                        </div>
+                                                    </div>
+												{% endif %}
+                                               
+											   
+											   {%if active_user.third_position%}
+                                                    <div class="timeline-item">
+                                                        <i class="mdi mdi-circle bg-info-lighten text-info timeline-icon"></i>
+                                                        <div class="timeline-item-info">
+                                                            <h5 class="mt-0 mb-1">
+															{%if active_user.third_position%}{{active_user.third_position}} {% endif %}
+															/{%if active_user.third_role%}{{active_user.third_role}} {% endif %}
+															</h5>
+                                                            <p class="font-14">
+															{%if active_user.third_company%}{{active_user.third_company}} {% endif %}
+															<span class="ms-2 font-12">
+															Year: {%if active_user.third_period%}{{active_user.third_period}} {% endif %}
+															</span></p>
+                                                            <p class="text-muted mt-2 mb-0 pb-3">
+															{%if active_user.third_role_description%}{{active_user.third_role_description}} {% endif %}
+															</p>
+                                                        </div>
+                                                    </div>
+												{% endif %}
+												
+												
+												
+												{%if active_user.fourth_position%}
+                                                    <div class="timeline-item">
+                                                        <i class="mdi mdi-circle bg-info-lighten text-info timeline-icon"></i>
+                                                        <div class="timeline-item-info">
+                                                            <h5 class="mt-0 mb-1">
+															{%if active_user.fourth_position%}{{active_user.fourth_position}} {% endif %}
+															/{%if active_user.fourth_role%}{{active_user.fourth_role}} {% endif %}
+															</h5>
+                                                            <p class="font-14">
+															{%if active_user.fourth_company%}{{active_user.fourth_company}} {% endif %}
+															<span class="ms-2 font-12">
+															Year: {%if active_user.fourth_period%}{{active_user.fourth_period}} {% endif %}
+															</span></p>
+                                                            <p class="text-muted mt-2 mb-0 pb-3">
+															{%if active_user.fourth_role_description%}{{active_user.fourth_role_description}} {% endif %}
+															</p>
+                                                        </div>
+                                                    </div>
+												{% endif %}
+												
+												
+												
+												{%if active_user.fifth_position%}
+                                                    <div class="timeline-item">
+                                                        <i class="mdi mdi-circle bg-info-lighten text-info timeline-icon"></i>
+                                                        <div class="timeline-item-info">
+                                                            <h5 class="mt-0 mb-1">
+															{%if active_user.fifth_position%}{{active_user.fifth_position}} {% endif %}
+															/{%if active_user.fifth_role%}{{active_user.fifth_role}} {% endif %}
+															</h5>
+                                                            <p class="font-14">
+															{%if active_user.fifth_company%}{{active_user.fifth_company}} {% endif %}
+															<span class="ms-2 font-12">
+															Year: {%if active_user.fifth_period%}{{active_user.fifth_period}} {% endif %}
+															</span></p>
+                                                            <p class="text-muted mt-2 mb-0 pb-3">
+															{%if active_user.fifth_role_description%}{{active_user.fifth_role_description}} {% endif %}
+															</p>
+                                                        </div>
+                                                    </div>
+												{% endif %}
+													
+
+                                                </div>
+                                                <!-- end timeline -->        
+<!-- Static Backdrop modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add a Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                 <form  method = "POST" enctype ="multipart/form-data" action="{% url 'addproject' %}" novalidate>
+								{% csrf_token %}
+{% include "account/form_2.html" %}
+                                 
+                                   
+
+                                    <div class="mb-1 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Save Project</button>
+                                    </div>
+
+                                </form>
+            </div>
+			 <div class="row">
+			 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close Form</button>
+               
+            </div> <!-- end modal footer -->
+			
+			</div>
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+                                                <h5 class="mb-3 mt-4 text-uppercase"><i class="mdi mdi-cards-variant me-1"></i>
+                                                    Projects</h5>
+                                                <div class="table-responsive">
+                                                    <table class="table table-borderless table-nowrap mb-0">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Clients</th>
+                                                                <th>Project Name</th>
+                                                                <th>Start Date</th>
+                                                                <th>Due Date</th>
+                                                                <th>Status</th>
+																<th><button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Add 
+</button></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+														{% for project in projects%}
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td><img src={% if project.project_image%} "{{project.project_image.url}}"{%else%}"{% static 'account/images/profile.png' %}"{%endif%} alt="table-user" class="me-2 rounded-circle" height="24">
+																{{project.clients}}</td>
+                                                                <td>{{project.project_name}}</td>
+                                                                <td>{{project.start_date}}</td>
+                                                                <td>{{project.due_date}}</td>
+                                                                <td><span class="badge badge-info-lighten">{{project.status}}</span></td>
+																<td><a href = "{% url 'editproject' project.pk %}"><button type="button" class="btn btn-success btn-sm mb-2">Edit</button></a></td>
+                                                            </tr>
+                                                           {% endfor %}
+    
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+    
+                                            </div> <!-- end tab-pane -->
+                                            <!-- end about me section content -->
+    
+                                            <!-- end timeline content-->
+    
+                                            <div class="tab-pane" id="settings">
+                                               <form  method = "POST" enctype ="multipart/form-data" action="{% url 'editp' %}" novalidate>
+								{% csrf_token %}
+												{% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+                                                    <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i> Personal Info</h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "profile_image"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "full_name"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+    
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "mobile"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "phone"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "email"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "address"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "languages"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "best_skill"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "employment"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "status"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="mb-3">
+                                                               
+                                                                  {% for field in form.visible_fields %}
+
+{% if field.name == "about_me"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" rows="3"%}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid " rows="3"%}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" rows="3"%}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+    <!-- end row
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="useremail" class="form-label">Email Address</label>
+                                                                <input type="email" class="form-control" id="useremail" placeholder="Enter email">
+                                                                <span class="form-text text-muted"><small>If you want to change email please <a href="javascript: void(0);">click</a> here.</small></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label for="userpassword" class="form-label">Password</label>
+                                                                <input type="password" class="form-control" id="userpassword" placeholder="Enter password">
+                                                                <span class="form-text text-muted"><small>If you want to change password please <a href="javascript: void(0);">click</a> here.</small></span>
+                                                            </div>
+                                                        </div>
+                                                    </div> <!-- end row 
+     -->
+                                                    <h5 class="mb-3 text-uppercase bg-light p-2"><i class="mdi mdi-office-building me-1"></i> Company Info</h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "business"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "website"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+    
+                                                    <h5 class="mb-3 text-uppercase bg-light p-2"><i class="mdi mdi-earth me-1"></i> Social</h5>
+                                                    <div class="row">
+													
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                                                          {% for field in form.visible_fields %}
+{% if field.name == "facebook"%}	
+    {{ field.label_tag }}
+	<div class="input-group">
+                                           
+                                           
+                                       
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	   <span class="input-group-text"><i class="mdi mdi-facebook"></i></span>
+        {% render_field field class="form-control is-invalid" %}
+		
+                                                                   
+                                                                   
+                                                                
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  <span class="input-group-text"><i class="mdi mdi-facebook"></i></span>
+        {% render_field field class="form-control is-valid" %}
+		
+                                                                    
+                                                                    
+                                                               
+      {% endif %}
+	  
+    {% else %}
+	<span class="input-group-text"><i class="mdi mdi-facebook"></i></span>
+      {% render_field field class="form-control" %}
+	 
+                                                                    
+                                                                   
+                                                                
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+	 
+	
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                                                          {% for field in form.visible_fields %}
+{% if field.name == "instagram"%}	
+    {{ field.label_tag }}
+	<div class="input-group">
+                                           
+                                           
+                                       
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	   <span class="input-group-text"><i class="mdi mdi-instagram"></i></span>
+        {% render_field field class="form-control is-invalid" %}
+		
+                                                                   
+                                                                   
+                                                                
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  <span class="input-group-text"><i class="mdi mdi-instagram"></i></span>
+        {% render_field field class="form-control is-valid" %}
+		
+                                                                    
+                                                                    
+                                                               
+      {% endif %}
+	  
+    {% else %}
+	<span class="input-group-text"><i class="mdi mdi-instagram"></i></span>
+      {% render_field field class="form-control" %}
+	 
+                                                                    
+                                                                   
+                                                                
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+	 
+	
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+     <div class="row">
+													
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                                                          {% for field in form.visible_fields %}
+{% if field.name == "twitter"%}	
+    {{ field.label_tag }}
+	<div class="input-group">
+                                           
+                                           
+                                       
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	   <span class="input-group-text"><i class="mdi mdi-twitter"></i></span>
+        {% render_field field class="form-control is-invalid" %}
+		
+                                                                   
+                                                                   
+                                                                
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  <span class="input-group-text"><i class="mdi mdi-twitter"></i></span>
+        {% render_field field class="form-control is-valid" %}
+		
+                                                                    
+                                                                    
+                                                               
+      {% endif %}
+	  
+    {% else %}
+	<span class="input-group-text"><i class="mdi mdi-twitter"></i></span>
+      {% render_field field class="form-control" %}
+	 
+                                                                    
+                                                                   
+                                                                
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+	 
+	
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                                                          {% for field in form.visible_fields %}
+{% if field.name == "tiktok"%}	
+    {{ field.label_tag }}
+	<div class="input-group">
+                                           
+                                           
+                                       
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	   <span class="input-group-text"><i class="mdi mdi-tiktok"></i></span>
+        {% render_field field class="form-control is-invalid" %}
+		
+                                                                   
+                                                                   
+                                                                
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  <span class="input-group-text"><i class="mdi mdi-tiktok"></i></span>
+        {% render_field field class="form-control is-valid" %}
+		
+                                                                    
+                                                                    
+                                                               
+      {% endif %}
+	  
+    {% else %}
+	<span class="input-group-text"><i class="mdi mdi-tiktok"></i></span>
+      {% render_field field class="form-control" %}
+	 
+                                                                    
+                                                                   
+                                                                
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+	 
+	
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+    
+                                                    
+                                                    <div class="text-end">
+                                                        <button type="submit" class="btn btn-success mt-2"><i class="mdi mdi-content-save"></i> Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- end settings content-->
+											
+											  <!-- EXPERIENCE PANE-->
+											
+											<div class="tab-pane" id="experience">
+                                               <form  method = "POST" enctype ="multipart/form-data" action="{% url 'editp' %}" novalidate>
+								{% csrf_token %}
+												{% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+                                                    <h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>1st Experience </h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "first_position"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Position</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "first_role"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Role</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+    
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "first_company"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Company</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "first_period"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Period</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="mb-3">
+                                                               
+                                                                  {% for field in form.visible_fields %}
+
+{% if field.name == "first_role_description"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Role Description</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+               <div class="text-end">
+                                                        <button type="submit" class="btn btn-success mt-2"><i class="mdi mdi-content-save"></i> Save</button>
+                                                    </div>
+<h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>2nd Experience </h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "second_position"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Position</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "second_role"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Role</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+    
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "second_company"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Company</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "second_period"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Period</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="mb-3">
+                                                               
+                                                                  {% for field in form.visible_fields %}
+
+{% if field.name == "second_role_description"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Role Description</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+               <div class="text-end">
+                                                        <button type="submit" class="btn btn-success mt-2"><i class="mdi mdi-content-save"></i> Save</button>
+                                                    </div>
+<h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>3rd Experience </h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "third_position"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Position</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "third_role"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Role </label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+    
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "third_company"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Company</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "third_period"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Period</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="mb-3">
+                                                               
+                                                                  {% for field in form.visible_fields %}
+
+{% if field.name == "third_role_description"%}
+  <div class="form-group">
+   
+	<label for="simpleinput" class="form-label">Role Description</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+               <div class="text-end">
+                                                        <button type="submit" class="btn btn-success mt-2"><i class="mdi mdi-content-save"></i> Save</button>
+                                                    </div>
+<h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>4th Experience </h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "fourth_position"%}
+  <div class="form-group">
+   
+	<label for="simpleinput" class="form-label">Position</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "fourth_role"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Role </label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+    
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "fourth_company"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Company</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "fourth_period"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Period</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="mb-3">
+                                                               
+                                                                  {% for field in form.visible_fields %}
+
+{% if field.name == "fourth_role_description"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Role Description</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+               <div class="text-end">
+                                                        <button type="submit" class="btn btn-success mt-2"><i class="mdi mdi-content-save"></i> Save</button>
+                                                    </div>
+<h5 class="mb-4 text-uppercase"><i class="mdi mdi-account-circle me-1"></i>5th Experience </h5>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "fifth_position"%}
+  <div class="form-group">
+     <label for="simpleinput" class="form-label">Position</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "fifth_role"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Role</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+    
+	
+	
+	
+	
+	 <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "fifth_company"%}
+  <div class="form-group">
+    
+	<label for="simpleinput" class="form-label">Company</label>
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "fifth_period"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Period</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="mb-3">
+                                                               
+                                                                  {% for field in form.visible_fields %}
+
+{% if field.name == "fifth_role_description"%}
+  <div class="form-group">
+    <label for="simpleinput" class="form-label">Role Description</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+                                                    </div> <!-- end row -->
+               
+                                                                                                                                                                                                                                                                    
+    
+                                                    
+                                                    <div class="text-end">
+                                                        <button type="submit" class="btn btn-success mt-2"><i class="mdi mdi-content-save"></i> Save</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- end settings content-->
+    
+											
+											
+											
+											
+											
+    
+                                        </div> <!-- end tab-content -->
+                                    </div> <!-- end card body -->
+                                </div> <!-- end card -->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row-->
+
+                    </div>
+                    <!-- container -->
+
+{% endblock%} 
+
+               
+{% block javascript %}
+ <script src="{% static 'account/jquery/jquery.js' %}"></script>
+<script src="{% static 'account/js/account/scripts.js' %}"></script>
+{% endblock javascript %}

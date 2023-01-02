@@ -1,0 +1,217 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+
+<div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            
+                                            <li class="breadcrumb-item"><a href="{% url 'posts'  %}">Posts</a></li>
+                                            <li class="breadcrumb-item active">New Post</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Social Feed</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+                        
+                        <div class="row">
+                        
+                              
+                            <div class="col-lg-12 ">
+                                <div class="card">
+                                    <div class="card-body p-0">
+                                        <ul class="nav nav-tabs nav-bordered">
+                                            <li class="nav-item">
+                                                <a href="#newpost" data-bs-toggle="tab" aria-expanded="false" class="nav-link active px-3 py-2">
+                                                    <i class="mdi mdi-pencil-box-multiple font-18 d-md-none d-block"></i>
+                                                    <span class="d-none d-md-block">Create Post</span>
+                                                </a>
+                                            </li>
+                                          
+                                        </ul> <!-- end nav-->
+                                        <div class="tab-content">
+                                            <div class="tab-pane show active p-3" id="newpost">
+                                                <!-- comment box -->
+                                                <div class="border rounded">
+                                                    <form method = "POST" action="{% url 'createpost' %}" enctype ="multipart/form-data" class="comment-area-box" novalidate>
+													{% csrf_token %}
+													{% for hidden_field in form.hidden_fields %}
+													  {{ hidden_field }}
+													{% endfor %}
+
+													{% if form.non_field_errors %}
+													  <div class="alert alert-danger" role="alert">
+														{% for error in form.non_field_errors %}
+														  {{ error }}
+														{% endfor %}
+													  </div>
+													{% endif %}
+													{% for field in form.visible_fields %}
+													{% if field.name == "post"%}
+													
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid border-0 resize-none" placeholder="Write something...." rows="4"%}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid border-0 resize-none" placeholder="Write something...." rows="4"%}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control border-0 resize-none" placeholder="Write something...." rows="4"%}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+                                                       {%endif%}
+                                                     {%endfor%} 
+													  <div>
+													  <div class="row g-1 image-preview" class="imagePreview">
+                                               
+                                                <div id="imagecol1" class="d-none col">
+													<img id="image1preview" src="" alt="post-img" class="rounded me-1 mb-3 mb-sm-0  img-fluid w-100">
+                                                </div>
+												<div id="imagecol2" class="d-none col">    
+													<img id="image2preview" src="" alt="post-img" class="rounded me-1 img-fluid mb-3 w-100">
+                                                </div>
+												<div id="imagecol3"class="d-none col">    
+													<img id="image3preview" src="" alt="post-img" class="rounded me-1 img-fluid w-100">
+                                                </div>
+                                            </div>
+													  </div>
+														<div class="p-0 bg-light d-flex justify-content-between align-items-center">
+                                                            <div>
+																
+																
+           {% for field in form.visible_fields %}
+													{% if field.name == "post_images"%}
+													
+	
+    {% if form.is_bound %}
+	
+      
+        {% render_field field class="form-control" id="image_src" hidden='hidden' %}
+      
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" id="image_src" hidden='hidden' %}
+	  
+    {% endif %}
+
+    
+                                                       {%endif%}
+                                                     {%endfor%}  
+                                                             <p id='uploadbtn' class="btn btn-sm px-2 font-20 btn-light"><i class="uil uil-scenery"></i></p>
+                                                               
+                                                            </div>
+                                                            <button type="submit" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Post</button>
+                                                        </div>
+                                                    </form>
+                                                </div> <!-- end .border-->
+                                                <!-- end comment box -->
+                                            </div> <!-- end preview-->
+                                        </div> <!-- end tab-content-->
+                                    </div>
+                                </div>
+                                <!-- end new post -->
+                            </div> <!-- end col -->
+                        </div> <!--end row -->
+
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+				
+{% endblock%} 				
+{% block javascript%}
+<script>
+const input = document.querySelector("#image_src");
+const button = document.querySelector("#uploadbtn");
+const PreviewContainer = document.getElementById("imagePreview");
+const Image1 = document.getElementById("image1preview");
+const Image2 = document.getElementById("image2preview");
+const Image3 = document.getElementById("image3preview");
+
+
+const col1 = document.getElementById("imagecol1");
+const col2 = document.getElementById("imagecol2");
+const col3 = document.getElementById("imagecol3");
+button.addEventListener('click', event => input.click(event));
+
+input.addEventListener('change', function(){
+	const imagefiles = this.files;
+	if (imagefiles[0]){
+		
+		imagefile = imagefiles[0]
+		const reader = new FileReader();
+		console.log(imagefile)
+		reader.addEventListener('load',function(){
+			
+			col1.classList.remove('d-none')
+			Image1.setAttribute('src',this.result);
+			
+		
+		});
+		reader.readAsDataURL(imagefile);
+		
+	}
+	if (imagefiles[1]){
+		
+		imagefile = imagefiles[1]
+		const reader = new FileReader();
+		console.log(imagefile)
+		reader.addEventListener('load',function(){
+			
+			col2.classList.remove('d-none')
+			Image2.setAttribute('src',this.result);
+			
+		
+		});
+		reader.readAsDataURL(imagefile);
+		
+	}
+	if (imagefiles[2]){
+		
+		imagefile = imagefiles[2]
+		const reader = new FileReader();
+		console.log(imagefile)
+		reader.addEventListener('load',function(){
+			
+			col3.classList.remove('d-none')
+			Image3.setAttribute('src',this.result);
+			
+		
+		});
+		reader.readAsDataURL(imagefile);
+		
+	}
+	
+	
+}
+);
+
+
+
+</script>
+{%endblock%}

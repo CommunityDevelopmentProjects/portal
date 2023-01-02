@@ -1,0 +1,341 @@
+from django.shortcuts import render, redirect,get_object_or_404
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
+from account.models import Profile
+from .models import Support_Accounts,Support_Accounts_transactions
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.humanize.templatetags.humanize import naturaltime
+from .forms import createSupportAccountForm,SupportAccountForm,TreasurerConfirmSupportAccountForm
+from community.models import association
+from django.db.models import Q
+import json
+@login_required(login_url = 'logout') 
+def OpenSupportAccounts(request):
+    if 'activegroupbackend' in request.session:
+        accounts = Support_Accounts.objects.filter(account_status = 'Open',support_assoc_by__pk = request.session['activegroupbackend']).order_by('-id')
+    else:
+        return redirect('logout')
+    
+    return render(request,'account/mysupport/supportaccounts.html',{'accounts':accounts})
+
+
+@login_required(login_url = 'logout') 
+def ClosedSupportAccounts(request):
+    if 'activegroupbackend' in request.session:
+        accounts = Support_Accounts.objects.filter(account_status = 'Closed',support_assoc_by__pk = request.session['activegroupbackend']).order_by('-id')
+    else:
+        return redirect('logout')
+    
+    return render(request,'account/mysupport/closedsupportaccounts.html',{'accounts':accounts})
+
+@login_required(login_url = 'logout')    
+def CloseSupportAccountView(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        account = Support_Accounts.objects.get(pk = messagess)
+        account.account_status = 'Closed'
+        account.save()
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False) 
+    
+@login_required(login_url = 'logout')    
+def OpenSupportAccountView(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        account = Support_Accounts.objects.get(pk = messagess)
+        account.account_status = 'Open'
+        account.save()
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False) 
+    
+
+@login_required(login_url = 'logout') 
+def CreateSupportAccount(request):
+    form = createSupportAccountForm()
+    user = Profile.objects.get(user_p = request.user)
+    if 'activegroupbackend' in request.session:
+        assoc = association.objects.get(pk = request.session['activegroupbackend'])
+    else:
+        return redirect('logout')
+    if request.method == 'POST':
+         #pass form for validation
+        
+        form = createSupportAccountForm(request.POST)
+        #if form is valid and cleaned
+        if form.is_valid():
+       
+            account_name = form.cleaned_data['account_name']
+            call_to_action= form.cleaned_data['call_to_action']
+            button_text= form.cleaned_data['button_text']
+            needed_amount= form.cleaned_data['needed_amount']
+            description= form.cleaned_data['description']
+            account_status= form.cleaned_data['account_status']
+            display_total_status= form.cleaned_data['display_total_status']
+            if request.FILES.getlist('images'):
+                
+                images = request.FILES.getlist('images')
+                if len(images)  >=3:
+                    image1 = images[0]
+                    image2 = images[1]
+                    image3 = images[2]
+                    account= Support_Accounts(support_assoc_by = assoc,support_created_by = user,account_name = account_name,call_to_action = call_to_action,button_text= button_text,
+                    needed_amount = needed_amount,description=description,account_status = account_status,display_total_status=display_total_status,
+                    image1 = image1,image2 = image2,image3 = image3)
+                    account.save()
+                    return redirect('opensupportaccounts')
+                elif len(images) == 2:
+                    image1 = images[0]
+                    image2 = images[1]
+                   
+                    account= Support_Accounts(support_assoc_by = assoc,support_created_by = user,account_name = account_name,call_to_action = call_to_action,button_text= button_text,
+                    needed_amount = needed_amount,description=description,account_status = account_status,display_total_status=display_total_status,
+                    image1 = image1,image2 = image2)
+                    account.save()
+                    return redirect('opensupportaccounts')
+                elif len(images) == 1:
+                    image1 = images[0]
+                    
+                   
+                    account= Support_Accounts(support_assoc_by = assoc,support_created_by = user,account_name = account_name,call_to_action = call_to_action,button_text= button_text,
+                    needed_amount = needed_amount,description=description,account_status = account_status,display_total_status=display_total_status,
+                    image1 = image1)
+                    account.save()
+                    return redirect('opensupportaccounts')
+            else:    
+              
+                account= Support_Accounts(support_assoc_by = assoc,support_created_by = user,account_name = account_name,call_to_action = call_to_action,button_text= button_text,
+                needed_amount = needed_amount,description=description,account_status = account_status,display_total_status=display_total_status
+                )
+                account.save()
+                return redirect('opensupportaccounts')
+            
+           
+            
+            return redirect('opensupportaccounts')
+            
+        else:
+            
+            return render(request,'account/mysupport/createsupportaccount.html',{'form':form})
+    
+    return render(request,'account/mysupport/createsupportaccount.html',{'form':form})
+
+@login_required(login_url = 'logout') 
+def EditSupportAccount(request):
+    account = Support_Accounts.objects.get(pk = request.session['supportaccount'])
+    form = createSupportAccountForm(instance = account)
+    
+    if 'activegroupbackend' in request.session:
+        pass
+    else:
+        return redirect('logout')
+    if request.method == 'POST':
+         #pass form for validation
+        
+        form = createSupportAccountForm(request.POST, instance = account)
+        #if form is valid and cleaned
+        if form.is_valid():
+            account.account_name = form.cleaned_data['account_name']
+            account.call_to_action= form.cleaned_data['call_to_action']
+            account.button_text= form.cleaned_data['button_text']
+            account.needed_amount= form.cleaned_data['needed_amount']
+            account.description= form.cleaned_data['description']
+            account.account_status= form.cleaned_data['account_status']
+            account.display_total_status= form.cleaned_data['display_total_status']
+            if request.FILES.getlist('images'):
+                
+                images = request.FILES.getlist('images')
+                if len(images)  >=3:
+                    account.image1 = images[0]
+                    account.image2 = images[1]
+                    account.image3 = images[2]
+                    
+                    account.save()
+                    return redirect('opensupportaccounts')
+                elif len(images) == 2:
+                    account.image1 = images[0]
+                    account.image2 = images[1]
+               
+                    account.save()
+                    return redirect('opensupportaccounts')
+                elif len(images) == 1:
+                    account.image1 = images[0]
+                    
+                    account.save()
+                    return redirect('opensupportaccounts')
+            else:    
+              
+                account.save()
+                return redirect('opensupportaccounts')
+            
+            
+            return redirect('opensupportaccounts')
+            
+        else:
+            
+            return render(request,'account/mysupport/createsupportaccount.html',{'form':form,'account':account})
+    
+    return render(request,'account/mysupport/createsupportaccount.html',{'form':form,'account':account})
+
+
+
+
+@login_required(login_url = 'logout')    
+def SetSupportAccount(request):
+   
+    if request.method == 'POST':
+       
+       messagess = json.loads(request.body)
+       request.session['supportaccount'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False) 
+    
+    
+@login_required(login_url = 'logout') 
+def SingleSupportAccount(request):
+    form = SupportAccountForm()
+    form2 = TreasurerConfirmSupportAccountForm
+    if 'supportaccount' in request.session:
+        transactions = Support_Accounts_transactions.objects.filter(account_supported = request.session['supportaccount']).order_by('-id')
+        account = Support_Accounts.objects.get(pk =request.session['supportaccount'])
+    else:
+        return redirect('logout')
+    
+    return render(request,'account/mysupport/supportaccount.html',{'transactions':transactions,'account':account,'form2':form2,'form':form})
+
+
+
+@login_required(login_url = 'logout') 
+def OfferSupportAccount(request):
+    
+    
+    if request.method == 'POST':
+         #pass form for validation
+        
+        form = SupportAccountForm(request.POST)
+        #if form is valid and cleaned
+        if form.is_valid():
+            account = Support_Accounts.objects.get(pk =request.session['supportaccount'])
+            user = Profile.objects.get(user_p = request.user)
+            support_amount = form.cleaned_data['support_amount']
+            treasurer = account.support_created_by
+            offer = Support_Accounts_transactions(recievied_by=treasurer,support_amount = support_amount,support_by = user,account_supported = account)
+            offer.save()
+            return redirect('supportaccount')
+            
+        else:
+            
+            return redirect('supportaccount')
+    
+    return redirect('supportaccount')
+    
+    
+@login_required(login_url = 'logout')    
+def CancelOfferSupportAccount(request):
+   
+    if request.method == 'POST':
+       
+       messagess = json.loads(request.body)
+       offer = Support_Accounts_transactions.objects.get(pk = messagess)
+       offer.delete()
+    message_list = [{
+      
+        'message':'success', 
+    }]
+   
+    return JsonResponse(message_list,safe=False) 
+
+
+
+
+
+
+@login_required(login_url = 'logout')    
+def TOfferSupportAccountSess(request):
+   
+    if request.method == 'POST':
+       
+       messagess = json.loads(request.body)
+       request.session['offert2confirm']= messagess
+       
+    message_list = [{
+      
+        'message':'success', 
+    }]
+   
+    return JsonResponse(message_list,safe=False)
+
+    
+@login_required(login_url = 'logout')    
+def TreasurerConfirmOffer(request):
+    
+    if request.method == 'POST':
+        if request.POST.get('payement_mode') == 'Not Paid':
+            return redirect('supportaccount')
+        if 'offert2confirm' in request.session:
+            messagess = request.session['offert2confirm']
+            del request.session['offert2confirm']
+        else:
+            return redirect('supportaccount')
+        offer = Support_Accounts_transactions.objects.get(pk = messagess)
+        offer.tressurer_confirm = 'Valid'
+        
+        
+           
+           
+        
+        offer.transaction_id = request.POST.get('transaction_id')
+        offer.payement_mode = request.POST.get('payement_mode')
+        offer.support_paid = request.POST.get('support_paid')
+        offer.save()   
+    message_list = [{
+      
+        'message':'success', 
+    }]
+   
+    return redirect('supportaccount')        
+    
+    
+@login_required(login_url = 'logout')    
+def ConfirmOffer(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        offer = Support_Accounts_transactions.objects.get(pk = messagess)
+        offer.supporter_confirm = 'Valid'
+        try:
+           offerexist = Support_Accounts_transactions.objects.filter(account_balance__gt = 0, account_supported__pk = request.session['supportaccount']).order_by('-id')[0]
+           balance = offerexist.account_balance+offer.support_paid
+           
+        except:
+           balance = offer.support_paid
+        offer.account_balance = balance    
+        offer.save()
+    message_list = [{
+      
+        'message':'success', 
+    }]
+   
+    return JsonResponse(message_list,safe=False)             

@@ -1,0 +1,211 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load humanize %}
+{% load my_tags %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                     <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            
+                                            <li class="breadcrumb-item active">Support Accounts</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Support Accounts</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row" data-masonry='{"percentPosition": true }' >
+						{%if accounts%}
+						{% for account in accounts%}
+                            <div class="col-sm-4 col-xl-3">
+                                
+                                <!-- end card-->
+
+                                <div class="card cta-box bg-primary text-white">
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <h3 {% if 'leaders_role' in request.session %}	
+											{% if request.session.leaders_role == "1" or request.session.leaders_role == "2"%}
+                                            onclick="EditAccount({{account.pk}})" {%endif%}{%endif%}style="cursor:pointer;" class="m-0 fw-normal cta-box-title">
+											<i class="dripicons-pencil"></i>
+											{{account.account_name}} 
+											{%if account.needed_amount%}(
+											
+											{{account.needed_amount|intcomma}}
+											{% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%}
+											Needed
+											){%endif%}
+											</h3>
+											{%if account.image1%}
+                                            <img class="my-3 w-100" src="{{account.image1.url}}"  alt="Generic placeholder image">
+											{%elif account.description%}
+											<p style=" text-overflow:ellipsis; font-size:13px;
+  overflow:hidden;
+  padding-bottom:0;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  " >{{account.description}}</p>
+											{%endif%}
+                                            <br>
+
+                                            <a onclick="CallToAction({{account.pk}})" style="cursor:pointer;" class="btn btn-sm btn-light btn-rounded">{{account.call_to_action}}<i class="mdi mdi-arrow-right"></i></a>
+                                        </div>
+                                    </div>
+                                    <!-- end card-body -->
+                                </div>
+                                <!-- end card-->
+
+                            </div> <!-- end col-->
+							{%endfor%}
+							{%endif%}
+							
+							
+						</div>
+                        <!-- end row -->
+
+                    </div> <!-- container -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+
+<script src="{% static 'account/js/vendor/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'account/js/vendor/dataTables.bootstrap5.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.responsive.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/responsive.bootstrap5.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.checkboxes.min.js'%}"></script>
+
+		
+<script src ="{% static 'account/js/vendor/dataTables.buttons.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.bootstrap5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.html5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.flash.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.print.min.js' %}"></script>
+<script src ="{% static 'account/js/pages/demo.datatable-init.js' %}"></script>
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+
+
+
+function CallToAction(id){
+	message = id
+	
+	
+	fetch("{% url 'setsupport' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'supportaccount' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+function EditAccount(id){
+	message = id
+	
+	
+	fetch("{% url 'seteditsupportaccount' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'editsupportaccount' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

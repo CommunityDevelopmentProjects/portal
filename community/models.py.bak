@@ -1,0 +1,90 @@
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth import get_user_model
+from django.core.validators import FileExtensionValidator
+from account.models import Profile
+from imagekit.models import ProcessedImageField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+role_choices = [
+    ('President','President'),('General Secretary','General Secretary')
+    ,('Treasurer','Treasurer'),('Other Position','Other Position')
+    ] 
+asspc_type = [
+    ('Association','Association'),('Community','Community'),('Company/Business','Company/Business')
+    ,('University','University'),('Secondary','Secondary')
+    ]    
+
+privacy_type = [
+    ('Public','Public'),('Private','Private')
+    
+    ]  
+lstatus_choices = [
+    ('Active','Active'),('Inactive','Inactive'),('Deleted','Deleted')
+    
+    ]      
+# Create your models here.
+class association(models.Model):
+    founder = models.ForeignKey(Profile,on_delete = models.CASCADE, related_name = 'founder')
+    parent = models.CharField(max_length=2555,default =0 )
+    profile_image = ProcessedImageField(upload_to='media',blank=True, null=True,
+                                           processors=[ResizeToFill(100, 100)],
+                                           format='JPEG',
+                                           options={'quality': 100})
+    name = models.CharField(max_length=255,unique = True)
+    address = models.CharField(max_length=255)
+    privacy = models.CharField(max_length=255,choices = privacy_type, default = 'Private' )
+    association_type = models.CharField(max_length=255,choices = asspc_type, default = 'Association' )
+    school_code = models.CharField(max_length=255,null = True,blank = True,unique=True)
+    mobile = models.CharField(max_length=255,null = True,blank = True)
+    phone = models.CharField(max_length=255,null = True,blank = True)
+    email = models.CharField(max_length=255,null = True,blank = True)
+    motto = models.CharField(max_length=255,null = True,blank = True)
+    facebook = models.CharField(max_length=255,null = True,blank = True)
+    twitter = models.CharField(max_length=255,null = True,blank = True)
+    youtube = models.CharField(max_length=255,null = True,blank = True)
+    slogan = models.CharField(max_length=255)
+    currency = models.CharField(max_length=255,null = True,blank = True)
+    languages = models.CharField(max_length=255,null = True,blank = True)
+    about_us = models.TextField(max_length=255,null = True,blank = True)
+    mission = models.CharField(max_length=255,null = True,blank = True)
+    vission = models.CharField(max_length=255,null = True,blank = True)
+    first_goal = models.CharField(max_length=255,null = True,blank = True)
+    second_goal = models.CharField(max_length=255,null = True,blank = True)    
+    third_goal = models.CharField(max_length=255,null = True,blank = True)
+    what_we_do = models.TextField(max_length=500,null = True,blank = True)
+    head_office = models.CharField(max_length=255,null = True,blank = True)
+    financial_year = models.CharField(max_length=255)
+    approved = models.IntegerField(default = 1)
+    
+          
+    def __str__(self):
+        return str(self.founder)+'('+str(self.name)+')'
+        
+        
+#group and members 
+class association_member(models.Model):
+    member = models.ForeignKey(Profile,on_delete = models.CASCADE, related_name = 'member')
+    myassociation = models.ForeignKey(association,on_delete = models.CASCADE, related_name = 'myassociation')
+    active_status = models.CharField(max_length=255, default ='active')
+    member_status = models.CharField(max_length=255, default ='active' )
+    date_joined = models.DateField(auto_now_add = True) 
+    
+          
+    def __str__(self):
+        return str(self.member)+'('+str(self.myassociation)+')'
+        
+class association_leader(models.Model):
+ 
+    associationleader = models.ForeignKey(association_member,on_delete = models.CASCADE, related_name = 'associationleader')   
+    position = models.CharField(max_length=255,choices = role_choices, default = 'President' )
+    other_position = models.CharField(max_length=255,blank = True,null = True )
+    leadership_role = models.CharField(max_length=255, default = 1 )
+    financial_year = models.CharField(max_length=255,blank = True,null = True)
+    leader_status = models.CharField(max_length=255, default ='active',choices = lstatus_choices, )
+    date_joined = models.DateField(auto_now_add = True)    
+    
+    def __str__(self):
+        return str(self.associationleader)+'('+str(self.position)+')'       

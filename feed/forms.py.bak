@@ -1,0 +1,18 @@
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from phonenumber_field.formfields import PhoneNumberField
+from django.urls import reverse_lazy
+from django.contrib.auth import login,authenticate,logout
+from .models import Posts
+
+User = get_user_model()
+
+
+
+class PostForm(forms.ModelForm):
+    post_images = forms.ImageField(required=False,widget = forms.FileInput(attrs={'multiple':True}))
+    class Meta:
+        model = Posts
+        fields = ['post']
+        

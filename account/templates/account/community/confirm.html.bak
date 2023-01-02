@@ -1,0 +1,76 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+ <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+<div class="card">
+                            <!-- Logo-->
+                           
+
+
+<!-- Modal -->
+
+                            <div class="card-body p-4">
+                                
+                                <div class="text-center w-75 m-auto">
+                                    <h4 class="text-dark-50 text-center mt-0 fw-bold">Confirm</h4>
+                                    
+                                </div>
+								<!-- CONFIRM CHILD COMMUNITY DELETION -->
+								{%if assoc %}
+                                <form  method = "POST" enctype ="multipart/form-data" action ="{% url 'removecomm' %}"  novalidate>
+								{% csrf_token %}
+{% include "account/form.html" %}
+                                 <p>Are you sure, you want to delete {{assoc.name}} from Our Child Communities????</p>
+								 
+                                    <div class="row">
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button type="submit" class="btn btn-danger" >
+    Delete 
+</button>
+                                    </div>
+									</div>
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button class="btn btn-primary" type="button"> Cancel</button>
+                                    </div>
+									</div>
+					</div>
+                                </form>
+								{% endif %}
+								<!-- CONFIRM MEMBER REMOVAL FROM THE COMMUNITY -->
+							{%if member %}
+                                <form  method = "POST" enctype ="multipart/form-data" action ="{% url 'confirm' %}"  novalidate>
+								{% csrf_token %}
+{% include "account/form.html" %}
+                                 <p>Are you sure, you want to remove {{member.member.user_p.user_name}}({{member.member.full_name}}) from {{member.myassociation.name}}</p>
+								 
+                                    <div class="row">
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button type="submit" class="btn btn-danger" >
+    Delete 
+</button>
+                                    </div>
+									</div>
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button class="btn btn-primary" type="button"> Cancel</button>
+                                    </div>
+									</div>
+					</div>
+                                </form>
+								{% endif %}
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+</div>
+</div>
+</div>
+
+{% endblock content%}

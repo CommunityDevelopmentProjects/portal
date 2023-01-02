@@ -1,0 +1,710 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% load humanize %} 
+{% block content %}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                     <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                           
+                                            <li class="breadcrumb-item active">{{account.account_name}}</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">{{account.account_name}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirm Payement </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							 <form method = "POST" action="{% url 'tconfirmoffer'  %}" enctype ="multipart/form-data" class="comment-area-box" novalidate>
+													{% csrf_token %}
+													{% for hidden_field in form2.hidden_fields %}
+													  {{ hidden_field }}
+													{% endfor %}
+
+
+						
+
+
+
+													{% if form2.non_field_errors %}
+													  <div class="alert alert-danger" role="alert">
+														{% for error in form2.non_field_errors %}
+														  {{ error }}
+														{% endfor %}
+													  </div>
+													{% endif %}
+					                        
+ <div class="row">
+                                                        <div class="col-md-12">
+														
+		<div class="mb-2">
+                                                                
+
+
+
+
+{% for field in form2.visible_fields %}
+
+{% if field.name == "support_paid"%}
+  <div class="form-group">
+    <label>Amount Recieved</label>
+	
+    {% if form2.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>												
+														
+														
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form2.visible_fields %}
+
+{% if field.name == "payement_mode"%}
+  <div class="form-group">
+    <label>Payement Mode Used</label>
+	
+    {% if form2.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+															
+															
+															
+															
+ <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form2.visible_fields %}
+
+{% if field.name == "transaction_id"%}
+  <div class="form-group">
+    <label>Transaction ID</label>
+	
+    {% if form2.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>															
+                                                        </div>
+														
+														</div>
+														<div class="mb-3 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Save</button>
+                                    </div>
+														</form>
+														
+							
+							
+							
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->						
+						
+						
+						
+						
+						
+						
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Support</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							 <form method = "POST" action="{% url 'offersupportaccount'  %}" enctype ="multipart/form-data" class="comment-area-box" novalidate>
+													{% csrf_token %}
+													{% for hidden_field in form.hidden_fields %}
+													  {{ hidden_field }}
+													{% endfor %}
+
+
+						
+
+
+
+													{% if form.non_field_errors %}
+													  <div class="alert alert-danger" role="alert">
+														{% for error in form.non_field_errors %}
+														  {{ error }}
+														{% endfor %}
+													  </div>
+													{% endif %}
+					                        
+ <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="mb-2">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "support_amount"%}
+  <div class="form-group">
+    <label>Please Enter Amount You Wish</label>
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														</div>
+														<div class="mb-3 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Save</button>
+                                    </div>
+														</form>
+														
+							
+							
+							
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+                        <div class="row">
+                            <div class="col-12">
+							
+							{% if account%}
+							<div class="row">
+									<h3 class="text-center">{{account.account_name}}</h3>
+								{%if account.image3  %}
+								<div class="card">
+									<div class="col-sm-12 ">
+									<p class="m-3">{{account.description}}</p>
+									</div>
+									<div class="row">
+									<div class="col-sm-4 mb-3">
+									<img id="image2preview" src="{{account.image1.url}}" alt="post-img" class=" w-100">
+									</div>
+									
+									<div class="col-sm-4 mb-3">
+									<img id="image2preview" src="{{account.image2.url}}" alt="post-img" class=" w-100">
+									</div>
+									
+									<div class="col-sm-4 mb-3">
+									<img id="image2preview" src="{{account.image3.url}}" alt="post-img" class=" w-100">
+									</div>
+									</div>
+								</div>	
+								
+								{%elif account.image2 %}
+								<div class="card">
+									<div class="col-sm-12 ">
+									<p class="m-3">{{account.description}}</p>
+									</div>
+									<div class="row">
+									<div class="col-sm-6 mb-3">
+									<img id="image2preview" src="{{account.image1.url}}" alt="post-img" class=" w-100">
+									</div>
+									
+									<div class="col-sm-6 mb-3">
+									<img id="image2preview" src="{{account.image2.url}}" alt="post-img" class=" w-100">
+									</div>
+									</div>
+								</div>
+									
+								{%elif account.image1 %}
+								<div class="card">
+									<div class="col-sm-12 ">
+									<p class="m-3">{{account.description}}</p>
+									</div>
+									<div class="col-sm-6 mb-3">
+									<img id="image2preview" src="{{account.image1.url}}" alt="post-img" class=" w-100">
+									</div>
+								</div>
+								{%endif%}
+							
+								{% if account.image1%}
+								{%else%}
+								<div class="card">
+								
+									<div class="col-sm-12 ">
+									<p class="m-3">{{account.description}}</p>
+									</div>
+								</div>
+									
+									
+									
+								{%endif%}
+								
+							</div>
+							{%endif%}
+							
+							<div class="d-flex justify-content-between" >
+							{%if account.account_status == 'Open'%}
+							<button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"class="btn btn-success mb-2 p-1"><b>{{account.button_text}}</b></button>
+							{%endif%}
+							{% if 'leaders_role' in request.session %}	
+											{% if request.session.leaders_role == "1" or request.session.leaders_role == "3"%}
+                                            
+							{%if account.account_status == 'Open'%}
+							<button type="button" onclick="CloseAccount({{account.pk}})"class="btn btn-danger mb-2 p-1">Close Account</button>
+							{%else%}
+							<button type="button" onclick="OpenAccount({{account.pk}})"class="btn btn-primary mb-2 p-1">Open Account</button>
+							{%endif%}
+							
+							{%endif%}
+							{%endif%}
+							</div>
+							
+							{%if transactions%}
+							
+							
+                                <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Amount Wished</th>
+            <th>Action</th>
+			<th>Confirm</th>
+            <th>Paid</th>
+		{%if account.display_total_status == 'Open'%}	
+            <th>Balance</th>
+			{%else%}
+			{%endif%}
+			<th>Payement</th>
+			<th>Transaction ID</th>
+            <th>Recieved</th>
+        </tr>
+    </thead>
+
+
+    <tbody>
+        <tr>
+		{% for transaction in transactions %}
+            <td>{% if transaction.support_by.full_name %}{{transaction.support_by.full_name}}{%else%}{{transaction.support_by.user_p.user_name}}{%endif%}</td>
+            <td>{{transaction.support_amount|intcomma}}</td>
+            
+			<td>
+			{% if transaction.supporter_confirm == 'Invalid' %}
+			{% if transaction.support_by == active_user %}
+			<a style="cursor:pointer;"onclick="CancelWish({{transaction.pk}})" > <i class="mdi mdi-delete text-danger"></i> Cancel Wish</a></td>
+			{%else%}
+			None
+			{%endif%}
+			{%else%}
+				None
+			{%endif%}
+			<td>
+			{% if transaction.tressurer_confirm == 'Invalid' %}
+				{% if transaction.recievied_by == active_user %}
+					<button type="button" onclick="TreasurerConfirm({{transaction.pk}})" data-bs-toggle="modal" data-bs-target="#staticBackdrop2"class="btn btn-primary mb-2 p-1">Please Confirm </button>
+				{% else %}
+					Processing
+				{% endif %}
+			
+			{% elif transaction.supporter_confirm == 'Invalid' %}
+				{% if transaction.support_by == active_user %}
+					<button type="button" onclick="OfferConfirm({{transaction.pk}})" class="btn btn-warning mb-2 p-1">Please Confirm </button>
+				{% else %}
+					Processing
+				{% endif %}
+			{% else %}
+				<span class="text-success">Confirmed</span>
+			{% endif %}
+			</td>
+			
+			<td>{{transaction.support_paid|intcomma}}</td>
+			{%if account.display_total_status == 'Open'%}
+			<td>{{transaction.account_balance|intcomma}}</td>
+			{%else%}
+			{%endif%}
+            <!-- check if offerer has confirm -->
+			<td>
+			{{transaction.payement_mode}}
+			</td>
+            <td>{{transaction.transaction_id}}</td>
+			
+			<td>
+			{% if transaction.recievied_by.full_name %}
+			{{transaction.recievied_by.full_name}}
+			{%elif transaction.recievied_by.user_p.user_name%}
+			{{transaction.recievied_by.user_p.user_name}}
+			{%else%}
+			Not Yet
+			{%endif%}</td>
+			
+        </tr>
+       {%endfor%}
+    </tbody>
+</table>
+{%else%} 
+<div class="card">
+								<h4 class="text-center">Please Click Above to Take Action</h4>
+								</div>
+{%endif%}
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+
+<script src="{% static 'account/js/vendor/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'account/js/vendor/dataTables.bootstrap5.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.responsive.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/responsive.bootstrap5.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.checkboxes.min.js'%}"></script>
+
+		
+<script src ="{% static 'account/js/vendor/dataTables.buttons.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.bootstrap5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.html5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.flash.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.print.min.js' %}"></script>
+<script src ="{% static 'account/js/pages/demo.datatable-init.js' %}"></script>
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+function CancelWish(id){
+	message = id
+	
+	
+	fetch("{% url 'canceloffersupportaccount' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+function TreasurerConfirm(id){
+	
+	message = id
+	
+	
+	fetch("{% url 'tconfirmoffersess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				alert(message.message)
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+function OfferConfirm(id){
+	message = id
+	
+	
+	fetch("{% url 'confirmoffer' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+
+function CloseAccount(id){
+	message = id
+	
+	
+	fetch("{% url 'closesupportaccount' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+function OpenAccount(id){
+	message = id
+	
+	
+	fetch("{% url 'opensupportaccount' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

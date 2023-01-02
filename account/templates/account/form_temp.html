@@ -1,0 +1,52 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+<div class="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-4 col-lg-5">
+                        <div class="card">
+
+                            <!-- Logo -->
+                            <div class="card-header pt-2 pb-2 text-center bg-primary">
+                                <a href="index.html">
+                                    <span><img src="assets/images/logo.png" alt="" height="18"></span>
+                                </a>
+                            </div>
+
+                            <div class="card-body p-4">
+                                
+                                <div class="text-center w-75 m-auto">
+								{% if setleader %}
+                                    <h4 class="text-dark-50 text-center pb-0 fw-bold">Set Community Leaders</h4>
+                                    
+									<p class="text-warning mb-2">You can give a Leader the President Position and Name him as Chairman using other position field</p>
+									<p class="text-danger mb-2">Select Active in Leader status field for leader to reflect </p>
+								{%endif%}	
+                                </div>
+
+                               <form  method = "POST" enctype ="multipart/form-data" action ="" novalidate>
+								{% csrf_token %}
+{% include "account/form.html" %}
+                                 
+
+                                    <div class="mb-3 mb-0 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit">Save Leader </button>
+                                    </div>
+
+                                </form>
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+
+                        
+                        <!-- end row -->
+
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container -->
+        </div>
+{% endblock %}

@@ -1,0 +1,244 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
+from .forms import RegisterForm,LoginForm,EdituserForm,ProjectForm
+from django.views.decorators.csrf import csrf_exempt
+from .models import Projects,Themesettings
+from community.models import association,association_member,association_leader
+
+import json
+from django.contrib.auth import get_user_model
+from .models import Profile
+
+import os
+User = get_user_model()
+
+
+def UserProfile(request):
+    user = Profile.objects.get(user_p = request.user)
+    projects = Projects.objects.filter(project_owner = user)
+    forms = ProjectForm()
+    
+    form = EdituserForm(instance = user)
+   
+    return render(request,'account/profile/profile.html',{'projects':projects,'forms':forms,'form':form})
+    
+
+# Create your views here.
+def RegisterUser(request):
+    register = 'form'
+    #assign RegisterForm to variable
+    form = RegisterForm()
+    context = {'form':form}
+    if request.method == 'POST':
+         #pass form for validation
+        
+        form = RegisterForm(request.POST)
+        #if form is valid and cleaned
+        if form.is_valid():
+        #save form, login user and redirect user to profile page
+            
+            user = form.save(commit=False)  
+            user.save()
+            
+            me = Profile(user_p = user)
+            me.save()
+            theme = Themesettings(theme_owner = me)
+            theme.save()
+            return redirect('login')
+            
+        else:
+            
+            return render (request,'account/profile/pages-register.html',{'register':register,'form':form})
+    
+    return render(request,'account/profile/pages-register.html',{'register':register,'form':form})
+    
+#login view (most of the form validation is done in the background)
+def login_user(request):
+    #assign LoginForm to variable
+    logins = 'form'
+    form = LoginForm()
+    #pass variable to context list
+    context = {'form':form}
+    #check if anything has been sent with post method
+    if request.method == 'POST':
+        #pass sent data to form for validation
+        form = LoginForm(request.POST)
+        #if form is valid, then authenticate user
+        if form.is_valid():
+            phone_number = form.cleaned_data.get('phone_number')
+            password = form.cleaned_data.get('password')
+            
+            user = authenticate(request,phone_number = phone_number,password=password)
+            if user is not None:
+
+                login(request, user)
+                myuser = Profile.objects.get(user_p = request.user)
+                theme = Themesettings.objects.get(theme_owner= myuser)
+                request.session['theme'] = theme.theme_option
+                try:
+                    assoc = association_member.objects.get(member=myuser,active_status ='active' )
+                    request.session['activegroup'] = assoc.pk
+                    request.session['activegroupbackend'] = assoc.myassociation.pk
+                    request.session['activefinancialyear'] = assoc.myassociation.financial_year
+                    try:
+                        financial_year = assoc.myassociation.financial_year
+                        leader = association_leader.objects.get(financial_year =financial_year,associationleader=assoc,leader_status ='Active' )
+                       
+                        request.session['leaders_role'] = leader.leadership_role
+                        request.session['position'] = leader.other_position
+                    except:
+                        request.session['leaders_role'] = 0
+                        request.session['position'] = 'Resident'
+                except:
+                    request.session['activegroup'] = 0
+                    request.session['activegroupbackend'] = 0
+                    request.session['activefinancialyear'] = 0
+                return redirect('profile')
+            else:
+                
+                messages.error(request,'Incorrect Phone number or password')
+        else:
+            #else if form is invalid, return empty form with errors
+            return render (request,'account/profile/pages-login.html',{'login':logins,'form':form})
+    else:
+        return render(request,'account/profile/pages-login.html',{'login':logins,'form':form})
+    
+    return render(request,'account/profile/pages-login.html',{'login':logins,'form':form})       
+    
+@login_required(login_url = 'login')    
+def LogoutView(request):
+    logout(request)
+    return redirect('login')     
+    
+ #0752035103   
+def EdituserView(request):
+    user = Profile.objects.get(user_p = request.user)
+
+    if request.method == "POST" :
+        form = EdituserForm(request.POST, request.FILES,instance = user)
+        
+        if form.is_valid():
+           
+            form.save()
+            
+        else:
+            pass
+
+    return redirect('profile') 
+
+    
+@login_required(login_url = 'login')
+def CompleteuserView(request):
+    
+    form = EdituserForm()
+    context = {'form':form}
+    if request.method == 'POST':
+        form = EdituserForm(request.POST,request.FILES)
+        if form.is_valid():
+        
+            form.save()
+            
+        else:
+            return render(request,'accounts/profile/register.html',{'form':form})
+    
+    #check if anything has been sent with post method
+    return render(request,'accounts/profile/register.html',{'form':form})   
+
+
+
+    ##PROJECTS ###
+    
+# Create project here.
+def AddProjectView(request):
+ 
+    if request.method == 'POST':
+         #pass form for validation
+        
+        forms = ProjectForm(request.POST,request.FILES)
+        #if form is valid and cleaned
+        if forms.is_valid():
+        #save form, login user and redirect user to profile page
+            user = Profile.objects.get(user_p = request.user)
+            project = forms.save(commit=False) 
+            project.project_owner = user
+            project.save()
+            
+         
+            return redirect('profile')
+            
+        else:
+            
+            return render (request,'account/profile/profile.html',{'forms':forms})
+    
+    return render(request,'account/profile/profile.html',{'forms':forms})
+        
+        
+#delete project view
+def DeleteProjectView(request):
+    
+   
+    if request.method == 'POST':
+        project = request.POST.get('delete')
+        project = Projects.objects.get(pk = project)
+        if project.project_image:
+            os.remove(project.project_image.path) 
+        project.delete()
+        
+        
+        
+        return redirect('profile')
+    return redirect('profile')                  
+    
+    
+#edit project view    
+def EditProjectView(request,project_id):
+    project = Projects.objects.get(pk = project_id)
+    forms = ProjectForm()
+    editproject = "POST"
+    form = ProjectForm(instance = project)
+    if request.method == "POST" :
+        form = ProjectForm(request.POST, request.FILES,instance = project)
+        if form.is_valid():
+            
+            form.save()
+            return redirect('profile')
+        else:
+            return render(request,'account/editpage.html',{'form':form})
+
+    return render(request,'account/editpage.html',{'project':project,'form':form,'forms':forms,'editproject':editproject})
+
+
+
+         
+@login_required(login_url = 'logout')    
+def ThemeSettingsView(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        
+        if messagess == 1:
+            user = Profile.objects.get(user_p= request.user)
+            theme = Themesettings.objects.get(theme_owner = user)
+            theme.theme_option = 'light'
+            theme.save()
+            del request.session['theme']
+            request.session['theme'] = 'light'
+        elif messagess == 2:
+            user = Profile.objects.get(user_p= request.user)
+            theme = Themesettings.objects.get(theme_owner = user)
+            theme.theme_option = 'dark'
+            theme.save()
+            del request.session['theme']
+            request.session['theme'] = 'dark'
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False) 
+ 

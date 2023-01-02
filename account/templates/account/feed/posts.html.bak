@@ -1,0 +1,500 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load humanize %}
+{% load my_tags %}
+{% block content%}
+  <div class="container-fluid">
+                                                <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            
+                                            
+                                            <li class="breadcrumb-item active">Social Feed</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title text-warning"><a href="{% url 'createpost'  %}">New Post</a></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <!-- start page title -->
+                        <div class="row infinite-container">
+
+{% if posts%}
+{% for post in posts%}
+{% if post.images == 0%}
+<!-- NO IMAGES POSTS -->
+                                <div class="infinite-item card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+													
+                                                    <div class="dropdown-menu dropdown-menu-end">
+													
+                                                        <!-- item-->
+                                                        <a href="{% url 'editpost' post.pk  %}" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="{% url 'deletepost' post.pk  %}" class="dropdown-item">Delete</a>
+														
+                                                    </div>
+													
+                                                </div>
+												{%endif%}
+                                                <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16  text-dark my-3">
+                                            {{post.post}}
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="my-1">
+								
+                                            <a href="javascript: like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+													{% for likepost in likeposts%}
+						
+											{% if post.pk == likepost.post_liked.id%}
+                                                            <i id="post-like{{post.pk}}" class='mdi mdi-heart me-1 text-danger'></i>
+															<span id="like-count{{post.pk}}" >{{post.likes_count}}</span> Likes
+															<style>
+															.not-liked{{post.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+											<i id="post-like{{post.pk}}" class='mdi mdi-heart  me-1 not-liked{{post.pk}}'></i>
+											<span class="not-liked{{post.pk}}" id="like-count{{post.pk}}" >{{post.likes_count}}</span> 
+											<span class="not-liked{{post.pk}}">Like</span>
+															
+											
+											</a>
+                                            <button  onclick="send_post({{post.pk}})" class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i> {{post.comment_count}} Comments</button>
+                                            
+                                        </div>
+
+                                        
+										
+										<!--post comment starts here-->
+
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+								
+								
+								
+								
+{%elif post.images == 3%}								
+<!-- THREE IMAGES POSTS -->								
+								<div class="infinite-item card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="{% url 'editpost' post.pk  %}" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="{% url 'deletepost' post.pk  %}" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+												{%endif%}
+                                                <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>About {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16 text-dark my-3">
+                                             <p>{{post.post}}</p>
+                                            <div class="row g-1">
+                                                <div class="col-8">
+                                                    <img src="{{post.post_image1.url}}" alt="post-img" class="rounded me-1 mb-3 mb-sm-0 img-fluid w-100">
+                                                </div>
+                                                <div class="col">
+                                                    <img src="{{post.post_image2.url}}" alt="post-img" class="rounded me-1 img-fluid mb-3 w-100">
+                                                   
+													<img src="{{post.post_image3.url}}" alt="post-img" class="rounded me-1 img-fluid w-100">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                         <div class="my-1">
+								
+                                            <a href="javascript: like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+													{% for likepost in likeposts%}
+						
+											{% if post.pk == likepost.post_liked.id%}
+                                                            <i id="post-like{{post.pk}}" class='mdi mdi-heart me-1 text-danger'></i>
+															<span id="like-count{{post.pk}}" >{{post.likes_count}}</span> Likes
+															<style>
+															.not-liked{{post.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+											<i id="post-like{{post.pk}}" class='mdi mdi-heart  me-1 not-liked{{post.pk}}'></i>
+											<span class="not-liked{{post.pk}}" id="like-count{{post.pk}}" >{{post.likes_count}}</span> 
+											<span class="not-liked{{post.pk}}">Like</span>
+															
+											
+											</a>
+                                            <button  onclick="send_post({{post.pk}})" class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i> {{post.comment_count}} Comments</button>
+                                            
+                                        </div>
+
+                                        
+										
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+								
+{%elif post.images == 1%}						
+
+
+<div class="infinite-item card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="{% url 'editpost' post.pk  %}" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="{% url 'deletepost' post.pk  %}" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+												{%endif%}
+                                                <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16  text-dark my-3">
+                                             <p>{{post.post}}</p>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="{{post.post_image1.url}}" alt="post-img" class="rounded me-1 mb-3 mb-sm-0 img-fluid w-100">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="my-1">
+                                             <a href="javascript: like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+													{% for likepost in likeposts%}
+						
+											{% if post.pk == likepost.post_liked.id%}
+                                                            <i id="post-like{{post.pk}}" class='mdi mdi-heart me-1 text-danger'></i>
+															<span id="like-count{{post.pk}}" >{{post.likes_count}}</span> Likes
+															<style>
+															.not-liked{{post.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+											<i id="post-like{{post.pk}}" class='mdi mdi-heart  me-1 not-liked{{post.pk}}'></i>
+											<span class="not-liked{{post.pk}}" id="like-count{{post.pk}}" >{{post.likes_count}}</span> 
+											<span class="not-liked{{post.pk}}">Like</span>
+															
+											
+											</a>
+                                            <button  onclick="send_post({{post.pk}})" class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i> {{post.comment_count}} Comments</button>
+                                            
+                                        </div>
+
+                                        
+										
+										<!--post comment starts here-->
+
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+
+
+						
+								
+{% elif post.images == 2%}								
+								
+	<!-- TWO IMAGES POSTS -->							
+								
+					<div class="infinite-item card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="{% url 'editpost' post.pk  %}" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="{% url 'deletepost' post.pk  %}" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+											{%endif%}	
+                                                <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>Public</span></small></p>
+                                            
+											</div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16  text-dark my-3">
+                                             <p>{{post.post}}</p>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="{{post.post_image1.url}}" alt="post-img" class="rounded me-1 mb-3 mb-sm-0 img-fluid w-100">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <img src="{{post.post_image2.url}}" alt="post-img" class="rounded me-1 img-fluid mb-3 w-100">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                         <div class="my-1">
+								
+                                            <a href="javascript: like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+													{% for likepost in likeposts%}
+						
+											{% if post.pk == likepost.post_liked.id%}
+                                                            <i id="post-like{{post.pk}}" class='mdi mdi-heart me-1 text-danger'></i>
+															<span id="like-count{{post.pk}}" >{{post.likes_count}}</span> Likes
+															<style>
+															.not-liked{{post.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+											<i id="post-like{{post.pk}}" class='mdi mdi-heart  me-1 not-liked{{post.pk}}'></i>
+											<span class="not-liked{{post.pk}}" id="like-count{{post.pk}}" >{{post.likes_count}}</span> 
+											<span class="not-liked{{post.pk}}">Like</span>
+															
+											
+											</a>
+                                            <button  onclick="send_post({{post.pk}})" class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i> {{post.comment_count}} Comments</button>
+                                            
+                                        </div>
+
+                                        
+										
+										<!--post comment starts here-->
+
+                                        </div>
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->			
+{%endif%}
+{% endfor %}	
+								
+							
+								
+								
+								
+								
+								
+</div>
+                        <!-- end row -->
+ {% if posts.has_next%}
+					<div class="d-flex justify-content-center">
+					<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=posts.next_page_number %}"></a>
+					</div>
+			
+				{%endif%}							
+{%else%}
+		<div class="card">
+			<h4 class="text-danger text-center">Ooops no posts Yet</h4>
+		</div>
+{%endif%}	                       
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+               
+
+{% block javascript %}
+<script>
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Posts You missed...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchposts' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+
+let send_post = (id) => {
+
+	assoc = id
+
+	fetch("{% url 'ajaxsinglepost' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if (message.message == 'success'){
+			window.location.href = "{% url 'singlepost' %}";
+			}
+		}
+	});
+}
+
+function like_post(id) {
+	
+	
+let like_btnid = "post-like".concat(id)
+let like_countid = "like-count".concat(id)
+
+let like_btn = document.getElementById(like_btnid);
+
+let likecount = document.getElementById(like_countid);
+	
+message = id
+	fetch("{% url 'ajaxlikepost' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+	for(message of messages){
+		if (message.message == 'success'){
+			like_btn.classList.toggle('text-danger');
+			likecount.innerHTML = message.count
+			}
+			}
+	});
+
+}
+</script>
+{% endblock javascript %}    

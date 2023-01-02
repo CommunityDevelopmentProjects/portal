@@ -1,0 +1,1535 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+        <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            
+                                            <li class="breadcrumb-item active">My Business Profile</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">My Business Profile</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                        
+{%if business %}
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop3Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdrop3Label">Delete 	product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							
+							
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deleteproduct' %}" novalidate>
+								{% csrf_token %}
+						<input type="hidden" name = "delete" value ="delete" >
+									<h4 class="mb-1 mt-2 text-center text-danger">Are You Sure you want to delete This Product?</h4>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" id="Delbuton"> Confirm </button>
+                                    </div>
+
+                                </form>
+								
+							
+						
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop2Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							
+							
+
+                                
+                                                    <form  method = "POST" enctype ="multipart/form-data" action="{% url 'addproduct' %}" >
+								{% csrf_token %}
+												{% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+                        
+ <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_brand_name"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+														
+				  <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_generic_name"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>										
+														
+														
+														</div>
+
+
+						<div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_price"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "product_old_price"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->
+													
+													
+													
+													
+      <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_quantity"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                {% for field in form.visible_fields %}
+
+{% if field.name == "product_color"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div> <!-- end col -->
+														
+														
+                                                    </div> <!-- end row -->													
+													
+
+      <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_packaging"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>
+														
+														
+	   <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_availability"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>													
+														
+														
+</div>		
+
+
+ <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="mb-3">
+
+
+
+{% for field in form.visible_fields %}
+
+{% if field.name == "product_description"%}
+  <div class="form-group">
+    {{ field.label_tag }}
+	
+    {% if form.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+                                                        </div>													
+														
+														
+</div>	
+
+
+
+
+
+
+
+												
+<div class="row">														
+                                                        <div class="col-md-12">
+                                                            <div class="mb-3">
+															
+									<div>
+													  <div class="row g-1 image-preview" class="imagePreview">
+                                               
+                                                <div id="imagecol1" class="d-none col">
+													<img id="image1preview" src="" alt="post-img" class="rounded me-1 mb-3 mb-sm-0  img-fluid w-100">
+                                                </div>
+												<div id="imagecol2" class="d-none col">    
+													<img id="image2preview" src="" alt="post-img" class="rounded me-1 img-fluid mb-3 w-100">
+                                                </div>
+												<div id="imagecol3"class="d-none col">    
+													<img id="image3preview" src="" alt="post-img" class="rounded me-1 img-fluid w-100">
+                                                </div>
+                                            </div>
+													  </div>						
+															
+                                        <div class="p-0 bg-light d-flex justify-content-between align-items-center">
+                                                            <div>
+																
+																
+           {% for field in form.visible_fields %}
+													{% if field.name == "product_images"%}
+													
+	
+    {% if form.is_bound %}
+	
+      
+        {% render_field field class="form-control" id="image_src" hidden='hidden' %}
+      
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" id="image_src" hidden='hidden' %}
+	  
+    {% endif %}
+
+    
+                                                       {%endif%}
+                                                     {%endfor%}  
+                                                             <p id='uploadbtn' class="btn btn-sm px-2 font-20 btn-light"><i class="uil uil-scenery"></i> Product Images</p>
+                                                               
+                                                            </div>
+                                                            </div>
+                                                        </div> <!-- end col -->
+														</div>
+														
+                                                    </div> <!-- end row -->														
+																							 
+
+
+
+																						
+
+																						<div class="mb-0 text-center">
+																							<button class="btn btn-primary" type="submit"> Save Product</button>
+																						</div>
+
+																					</form>
+                                               
+								
+							
+								
+								
+								
+								
+								
+								
+                               
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+                        <div class="row">
+                            
+ 
+ <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                                            <li class="nav-item">
+                                                <a href="#aboutme" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
+                                                    Profile
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#timeline" data-bs-toggle="tab" aria-expanded="true" class="nav-link rounded-0 active">
+                                                    Products
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#settings" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0 ">
+                                                    Settings
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane" id="aboutme">
+    
+                                                <div class="row">
+                            <div class="col-sm-12">
+                                <!-- Profile -->
+                                <div class="card bg-success">
+                                    <div class="card-body profile-user-box">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="row align-items-center">
+                                                   
+                                                        <div class="col-sm-4">
+                                                            <img src= {%if business.cover_image%}"{{business.cover_image.url}}"{%else%}"{% static 'account/images/open-business-sign.jpg' %}"{%endif%} alt="" class="w-100 img-thumbnail">
+                                                        </div>
+                                                    
+                                                    
+                                                        <div>
+                                                            <h4 class="mt-1 mb-1 text-white">{{business.business_name}}</h4>
+                                                            <p class="font-13 text-white-50"> {{business.business_slogan}}</p>
+    <!--
+                                                            <ul class="mb-0 list-inline text-light">
+                                                                <li class="list-inline-item me-3">
+                                                                    <h5 class="mb-1">$ 25,184</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Total Revenue</p>
+                                                                </li>
+                                                                <li class="list-inline-item">
+                                                                    <h5 class="mb-1">5482</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Number of Orders</p>
+                                                                </li>
+																
+                                                            </ul>
+	-->														
+															
+                                                        </div>
+                                                   
+                                                </div>
+                                            </div> <!-- end col-->
+
+                                            <div class="col-sm-4">
+                                                <div class="text-center mt-sm-0 mt-3 text-sm-end">
+                                                    <button type="button" class="btn btn-light">
+                                                        <i class="mdi mdi-account-edit me-1"></i> View Location
+                                                    </button>
+                                                </div>
+                                            </div> <!-- end col-->
+                                        </div> <!-- end row -->
+
+                                    </div> <!-- end card-body/ profile-user-box-->
+                                </div><!--end profile/ card -->
+								
+								
+								
+								
+                            </div> <!-- end col-->
+							
+							<div class="col-12">
+                                <!-- Personal-Information -->
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mt-0 mb-3">Business Information</h4>
+                                        <p class="text-muted font-13">
+                                            {{business.about_business}}
+                                        </p>
+
+                                        <hr>
+
+                                        <div class="text-start">
+                                            <p class="text-muted"><strong>Business Owner :</strong> <span class="ms-2">{{business.business_owner.full_name}}</span></p>
+
+                                            <p class="text-muted"><strong>Mobile :</strong><span class="ms-2">{{business.business_contacts}}</span></p>
+										<!--
+                                            <p class="text-muted"><strong>Email :</strong> <span class="ms-2">coderthemes@gmail.com</span></p>
+										--->
+                                            <p class="text-muted"><strong>Location :</strong> <span class="ms-2">{{business.business_address}}</span></p>
+
+											<p class="text-muted"><strong>Shipping Area :</strong> <span class="ms-2">{{business.shipping_area}}</span></p>
+
+                                            <p class="text-muted"><strong>Shipping Fee :</strong> <span class="ms-2">{{business.shipping_fee}}</span></p>
+<!-- 
+
+<!-- 
+                                            <p class="text-muted"><strong>Languages :</strong>
+                                                <span class="ms-2"> English, German, Spanish </span>
+                                            </p>
+                                            <p class="text-muted mb-0" id="tooltip-container"><strong>Elsewhere :</strong>
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Facebook"><i class="mdi mdi-facebook"></i></a>
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Twitter"><i class="mdi mdi-twitter"></i></a>
+                                                <a class="d-inline-block ms-2 text-muted" data-bs-container="#tooltip-container" data-bs-placement="top" data-bs-toggle="tooltip" href="" title="Skype"><i class="mdi mdi-skype"></i></a>
+                                            </p>
+-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Personal-Information -->
+
+                                <!-- Toll free number box
+                                <div class="card text-white bg-success overflow-hidden">
+                                    <div class="card-body">
+                                        <div class="toll-free-box text-center">
+                                            <h4> <i class="mdi mdi-deskphone"></i> Toll Free : 1-234-567-8901</h4>
+                                        </div>
+                                    </div> <!-- end card-body
+                                </div> <!-- end card-->
+                                <!-- End Toll free number box-->
+
+                                <!-- Messages
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">Messages</h4>
+
+                                        <div class="inbox-widget">
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-2.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Tomaslau</p>
+                                                <p class="inbox-item-text">I've finished it! See you so...</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-3.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Stillnotdavid</p>
+                                                <p class="inbox-item-text">This theme is awesome!</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-4.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Kurafire</p>
+                                                <p class="inbox-item-text">Nice to meet you</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-5.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Shahedk</p>
+                                                <p class="inbox-item-text">Hey! there I'm available...</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                            <div class="inbox-item">
+                                                <div class="inbox-item-img"><img src="assets/images/users/avatar-6.jpg" class="rounded-circle" alt=""></div>
+                                                <p class="inbox-item-author">Adhamdannaway</p>
+                                                <p class="inbox-item-text">This theme is awesome!</p>
+                                                <p class="inbox-item-date">
+                                                    <a href="#" class="btn btn-sm btn-link text-info font-13"> Reply </a>
+                                                </p>
+                                            </div>
+                                        </div> <!-- end inbox-widget 
+                                    </div> <!-- end card-body
+                                </div> <!-- end card-->
+
+                            </div> <!-- end col-->
+                        </div>
+                        <!-- end row -->
+                                            </div> <!-- end tab-pane -->
+                                            <!-- end about me section content -->
+    
+	
+	
+                                            <div class="tab-pane active show" id="timeline">
+    
+                                                <div class="row mb-2">
+                                            <div class="col-sm-4">
+											<ul class="list-group">
+											<h4>Click Categories below to add Products</h4>
+	{%for category in categories%}	
+	{% if category.business_category == 1%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(1)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Food and beverages
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 2%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(2)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Business and Finance
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 3%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(3)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Personal Care and Beauty
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 4%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(4)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Housing and Real Estate
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 5%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(5)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Automotive and Transport
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 6%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(6)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Home Appliances
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 7%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(7)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Agriculture
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 8%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(8)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Musical Instruments
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 9%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(9)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Shoe Repair and Maintence
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 10%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(10)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Clothing, Shoes and Jewery
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 11%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(11)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Entertainment
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 12%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(12)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Eletronics
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 13%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(13)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Health Care and Pharmacutical
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 14%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(14)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Sports
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 15%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(15)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Stationery
+	</li>
+	{%endif%}
+	
+	{% if category.business_category == 16%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(16)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Chemicals and Materials
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 17%}
+    <li data-bs-toggle="modal" style="cursor:pointer;" onclick="Category(17)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Machinery And Spare Parts
+	</li>
+	{%endif%}
+	
+	
+	{% if category.business_category == 18%}
+    <li data-bs-toggle="modal"  style="cursor:pointer;" onclick="Category(16)" data-bs-target="#staticBackdrop2"class="list-group-item">
+		
+		<i class="uil-plus-circle text-danger"></i> 
+		Decoration,Party and Wedding
+	</li>
+	{%endif%}
+	
+	
+	
+	
+   {%endfor%}
+</ul>
+                                               
+                                            </div>
+                                           
+                                        </div>
+                
+                                        <div class="table-responsive">
+                                            <table class="table table-centered w-100 dt-responsive nowrap" id="products-datatable">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th class="all" style="width: 20px;">
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" id="customCheck1">
+                                                                <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                                                            </div>
+                                                        </th>
+                                                        <th class="all">Product</th>
+                                                        <th>Category</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th>Packaging</th>
+                                                        <th>Status</th>
+                                                        <th style="width: 85px;">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {%for product in products%}  
+                                                    <tr>
+                                                        <td><!--action column -->
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" id="customCheck11">
+                                                                <label class="form-check-label" for="customCheck11">&nbsp;</label>
+                                                            </div>
+                                                        </td>
+                                                        <td><!--product column -->
+                                                            <img src={% if product.image1%}
+															"{{product.image1.url}}"
+															{% elif product.image2%}
+															"{{product.image2.url}}"
+															{% elif product.image3%}
+															"{{product.image3.url}}"
+															{%else%}
+															"{% static 'account/images/profile.png' %}"
+															{%endif%} 
+															alt="contact-img" title="contact-img" class="rounded me-3" height="48">
+                                                            <p class="m-0 d-inline-block align-middle font-16">
+                                                                <a onclick="Product({{product.pk}})" style="cursor:pointer;" class="text-body">{{product.product_brand_name}}</a>
+                                                                
+                                                            </p>
+                                                        </td>
+                                                        <td><!--Category column -->
+                                                            Baby Chairs
+                                                        </td>
+                                                        <td><!--Date column -->
+                                                            {{product.product_price}}
+                                                        </td>
+                                                        <td><!--price column -->
+                                                            {{product.product_quantity}}
+                                                        </td>
+                    
+                                                        <td><!--Quantity column -->
+                                                            {{product.product_packaging}}
+                                                        </td>
+                                                        <td><!--Status column -->
+                                                            <span class="badge bg-success">{{product.product_availability}}</span>
+                                                        </td>
+                    
+                                                        <td class="table-action"><!--Action column -->
+                                                            <a onclick="Product({{product.pk}})" style="cursor:pointer;"class="action-icon"> <i class="mdi mdi-eye"></i></a>
+                                                            <a href="{% url 'editproduct' product.pk %}" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
+                                                            <a onclick="DelProduct({{product.pk}})" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#staticBackdrop3"class="action-icon"> <i class="mdi mdi-delete"></i></a>
+                                                        </td>
+                                                    </tr>
+                                               {%endfor%}
+												
+												</tbody>
+                                            </table>
+                                        </div> <!-- end table responsive-->
+    
+                                            </div>
+                                            <!-- end timeline content-->
+    
+                                            <div class="tab-pane " id="settings"  >
+                                                	{% if my_groups %}
+<form class= "form" method = "POST" enctype ="multipart/form-data" action="{% url 'editbusiness' %}" >
+	{% csrf_token %}
+	{% if formerrors %}
+	<h4>formerrors</h4>
+	{%else%}
+	<div  class = 'primary'>Please Make sure you fill all fields</div>
+	{% endif %}
+	<div class="row">
+		
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_name" class="form-label">Business Name</label>
+				<input type="text" value="{{business.business_name}}" id="business_name" name="business_name" class="form-control form-control-sm" placeholder="Business Name" >
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_address" class="form-label">Business Address</label>
+				<input type="text" value="{{business.business_address}}"id="business_address" name="business_address" class="form-control form-control-sm" placeholder="Business Address" >
+				</div>
+			</div>
+			
+			
+			
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_contacts" class="form-label">Business Contacts</label>
+				<input type="text" value="{{business.business_contacts}}"id="business_contacts" name="business_contacts" class="form-control form-control-sm" placeholder="Business Contacts">
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_slogan" class="form-label">Business Motto</label>
+				<input type="text" value="{{business.business_slogan}}"id="business_slogan" name="business_slogan" class="form-control form-control-sm" placeholder="Business Motto" >
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="shipping_area" class="form-label">Shipping Area</label>
+				<input type="text" value="{{business.shipping_area}}"id="shipping_area" name="shipping_area" class="form-control form-control-sm" placeholder="Shipping Area" >
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="shipping_fee" class="form-label">Shipping Fee</label>
+				<input type="text" value="{{business.shipping_fee}}" id="shipping_fee" name="shipping_fee" class="form-control form-control-sm" placeholder="Shipping Fee" >
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<div class="mb-3">
+				
+				<label for="about_business">About Business</label>
+					<textarea class="form-control" name="about_business"placeholder="Write Short Notes About Your Business" id="about_business" style="height: 100px;">{{business.about_business}}</textarea>
+					
+				
+				</div>
+			</div>
+			
+	</div>
+	
+	
+	<h4><b>Please Select  Product Categories You will Deal In</b></h4>
+	<div class= "row">
+	{% if categories%}
+	
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 1%} checked {%endif%}{%endfor%}type="checkbox" value= "1" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Food and beverages </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 2%} checked {%endif%}{%endfor%}type="checkbox" value= "2" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Clothing, Shoes and Jewery </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 3%} checked {%endif%}{%endfor%}type="checkbox" value= "3" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Business and Finance </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 4%} checked {%endif%}{%endfor%}type="checkbox" value= "4" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Entertainment  </label>
+			</div>
+		</div>
+	
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 5%} checked {%endif%}{%endfor%}type="checkbox" value= "5" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Personal Care and Beauty</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 6%} checked {%endif%}{%endfor%}type="checkbox" value= "6" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Eletronics  </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 7%} checked {%endif%}{%endfor%}type="checkbox" value= "7" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Housing and Real Estate</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 8%} checked {%endif%}{%endfor%}type="checkbox" value= "8" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Health Care and Pharmacutical</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 9%} checked {%endif%}{%endfor%}type="checkbox" value= "9" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Automotive and Transport</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 10%} checked {%endif%}{%endfor%}type="checkbox" value= "10" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Sports</label>
+			</div>
+		</div>
+	
+			<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 11%} checked {%endif%}{%endfor%}type="checkbox" value= "11" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Home Appliances </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 12%} checked {%endif%}{%endfor%}type="checkbox" value= "12" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Stationery</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 13%} checked {%endif%}{%endfor%}type="checkbox" value= "12" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Agriculture</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 14%} checked {%endif%}{%endfor%}type="checkbox" value= "14" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Chemicals and Materials</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 15%} checked {%endif%}{%endfor%}type="checkbox" value= "15" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Musical Instruments</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 16%} checked {%endif%}{%endfor%}type="checkbox" value= "16" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Machinery And Spare Parts</label>
+			</div>
+		</div>
+		
+				<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 17%} checked {%endif%}{%endfor%}type="checkbox" value= "17" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Shoe Repair and Maintence</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input {% for category in categories%}{%if category.business_category == 18%} checked {%endif%}{%endfor%}type="checkbox" value= "18" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Decoration,Party and Wedding</label>
+			</div>
+		</div>
+		
+		
+		{%endif%}
+	</div>
+	<br>
+	<div class= "myassociations">
+	<h4><b>Select Associations,Communities or Groups Where Your Products will be Displayed</b></h4>
+	{% for assoc in my_groups%}
+
+    <input type="checkbox" {%if assoc.myassociation.pk == business.business_assoc1 or assoc.myassociation.pk == business.business_assoc2 or assoc.myassociation.pk == business.business_assoc3%}checked {%endif%}class="form-check-input assoc_check mb-2" id="customCheckcolor{{assoc.myassociation.pk}}" name= "my-association" value= "{{assoc.myassociation.pk}}" >
+    {{assoc.myassociation.name}}
+	<br>
+
+	
+	{% endfor %}
+	
+	</div>
+	<br>
+	<div>
+	<h4><b>Business Cover Image</b></h4>
+	<input type="file" name="cover_image" accept="image/*" class="form-control " >
+	</div>
+	
+	<div class="d-flex justify-content-between">
+	<div>
+		<button type="submit" class="btn btn-primary mt-2 text-center">Submit</button>
+	</div>
+	
+	<div>
+		  <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Delete 
+	</div>
+	</div>
+	
+	
+</form>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Delete Your Business</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							
+							
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deletebusiness' %}" novalidate>
+								{% csrf_token %}
+						
+									<p>Are You Sure you want to delete Your Business<span class = "text-danger"> {{business.business_name}}</span> .</p>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" type="submit"> Confirm </button>
+                                    </div>
+
+                                </form>
+								
+							
+								
+								
+								
+								
+								
+								
+                               
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+{% else%}
+<h4>
+You must belong to atleast one Association, Group or Community of People</h4>
+{% endif%}
+										   </div>
+                                            <!-- end settings content-->
+    
+                                        </div> <!-- end tab-content -->
+                                    </div> <!-- end card body -->
+                                </div> <!-- end card -->
+                            </div> <!-- end col -->
+                            <div class="col-xl-8">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+                             
+                                <!-- end row -->
+
+
+                               <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+						{%else%}
+						<div class="card">
+							<h4 class="text-danger text-center">You Have not Created any Business Yet</h4>
+						</div>
+						{%endif%}
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+{% endblock%} 
+
+               
+{% block javascript %}
+
+<script >
+function Category(id){
+	message = id
+	fetch("{% url 'categorysess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				alert('success')
+			}
+		}
+	});
+}
+
+function DelProduct(id){
+	message = id
+	
+	
+	fetch("{% url 'deleteproductajax' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				
+			}
+		}
+	});
+	
+	
+	
+}
+
+function Product(id){
+	message = id
+	
+	
+	fetch("{% url 'shopsess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+
+
+var limit = 3;
+$('input.assoc_check').on('click', function(evt) {
+	
+   if($(this).siblings(':checked').length >= limit) {
+       this.checked = false;
+   }
+});
+</script>
+<script>
+const input = document.querySelector("#image_src");
+const button = document.querySelector("#uploadbtn");
+const PreviewContainer = document.getElementById("imagePreview");
+const Image1 = document.getElementById("image1preview");
+const Image2 = document.getElementById("image2preview");
+const Image3 = document.getElementById("image3preview");
+
+
+const col1 = document.getElementById("imagecol1");
+const col2 = document.getElementById("imagecol2");
+const col3 = document.getElementById("imagecol3");
+button.addEventListener('click', event => input.click(event));
+
+input.addEventListener('change', function(){
+	const imagefiles = this.files;
+	if (imagefiles[0]){
+		
+		imagefile = imagefiles[0]
+		const reader = new FileReader();
+		console.log(imagefile)
+		reader.addEventListener('load',function(){
+			
+			col1.classList.remove('d-none')
+			Image1.setAttribute('src',this.result);
+			
+		
+		});
+		reader.readAsDataURL(imagefile);
+		
+	}
+	if (imagefiles[1]){
+		
+		imagefile = imagefiles[1]
+		const reader = new FileReader();
+		console.log(imagefile)
+		reader.addEventListener('load',function(){
+			
+			col2.classList.remove('d-none')
+			Image2.setAttribute('src',this.result);
+			
+		
+		});
+		reader.readAsDataURL(imagefile);
+		
+	}
+	if (imagefiles[2]){
+		
+		imagefile = imagefiles[2]
+		const reader = new FileReader();
+		console.log(imagefile)
+		reader.addEventListener('load',function(){
+			
+			col3.classList.remove('d-none')
+			Image3.setAttribute('src',this.result);
+			
+		
+		});
+		reader.readAsDataURL(imagefile);
+		
+	}
+	
+	
+}
+);
+
+
+
+</script>
+ <!-- third party js -->
+        <script src="{% static 'account/js/vendor/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'account/js/vendor/dataTables.bootstrap5.js'%}"></script>
+        <script src="{% static 'account/js/vendor/dataTables.responsive.min.js'%}"></script>
+        <script src="{% static 'account/js/vendor/responsive.bootstrap5.min.js'%}"></script>
+        <script src="{% static 'account/js/vendor/dataTables.checkboxes.min.js'%}"></script>
+
+        <!-- third party js ends -->
+
+        <!-- demo app -->
+        <script src="{% static 'account/js/pages/demo.products.js'%}"></script>
+{% endblock javascript %}

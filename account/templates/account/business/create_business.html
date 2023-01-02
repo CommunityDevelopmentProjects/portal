@@ -1,0 +1,324 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                          
+                                            <li class="breadcrumb-item active">Create Business Profile</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Create Business Profile</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                        
+                        <!-- end row -->
+
+
+                        <div class="row">
+                            
+                            <div class="col-12">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+
+
+                               
+								
+								<div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3 text-center text-success">It starts Simple like this</h4>
+									<div class="row">
+									
+										{% if my_groups %}
+<form class= "form" method = "POST" enctype ="multipart/form-data" action="{% url 'createbusiness' %}" >
+	{% csrf_token %}
+	{% if formerrors %}
+	<h4 class = 'text-center text-danger'>{{formerrors}}</h4>
+	{%else%}
+	<div  class = 'primary'>Please Make sure you fill all fields</div>
+	{% endif %}
+	<div class="row">
+		
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_name" class="form-label">Business Name</label>
+				<input type="text" id="business_name" name="business_name" class="form-control form-control-sm" placeholder="Business Name" >
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_address" class="form-label">Business Address</label>
+				<input type="text" id="business_address" name="business_address" class="form-control form-control-sm" placeholder="Business Address" >
+				</div>
+			</div>
+			
+			
+			
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_contacts" class="form-label">Business Contacts</label>
+				<input type="text" id="business_contacts" name="business_contacts" class="form-control form-control-sm" placeholder="Business Contacts">
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="business_slogan" class="form-label">Business Motto</label>
+				<input type="text" id="business_slogan" name="business_slogan" class="form-control form-control-sm" placeholder="Business Motto" >
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="shipping_area" class="form-label">Shipping Area</label>
+				<input type="text" id="shipping_area" name="shipping_area" class="form-control form-control-sm" placeholder="Shipping Area" >
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="mb-3">
+				
+				<label for="shipping_fee" class="form-label">Shipping Fee</label>
+				<input type="text" id="shipping_fee" name="shipping_fee" class="form-control form-control-sm" placeholder="Shipping Fee" >
+				</div>
+			</div>
+			<div class="col-sm-12">
+				<div class="mb-3">
+				
+				<label for="about_business">About Business</label>
+					<textarea class="form-control" name="about_business"placeholder="Write Short Notes About Your Business" id="about_business" style="height: 100px;"></textarea>
+					
+				
+				</div>
+			</div>
+			
+	</div>
+	
+	
+	<h4><b>Please Select  Product Categories You will Deal In</b></h4>
+	<div class= "row">
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "1" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Food and beverages </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "2" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Clothing, Shoes and Jewery </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "3" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Business and Finance </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "4" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Entertainment  </label>
+			</div>
+		</div>
+	
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "5" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Personal Care and Beauty</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "6" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Eletronics  </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "7" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Housing and Real Estate</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "8" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Health Care and Pharmacutical</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "9" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Automotive and Transport</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "10" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Sports</label>
+			</div>
+		</div>
+	
+			<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "11" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Home Appliances </label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "12" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Stationery</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "12" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Agriculture</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "14" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Chemicals and Materials</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "15" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Musical Instruments</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "16" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Machinery And Spare Parts</label>
+			</div>
+		</div>
+		
+				<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "17" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Shoe Repair and Maintence</label>
+			</div>
+		</div>
+	
+		<div class= "col-sm-6">
+			<div class="form-check form-checkbox-success mb-2">
+				<input type="checkbox" value= "18" name= "product_category" class="form-check-input" id="customCheckcolor2" >
+				<label class="form-check-label" for="customCheckcolor2">Decoration,Party and Wedding</label>
+			</div>
+		</div>
+		
+
+	
+	</div>
+	<br>
+	<div class= "myassociations">
+	<h4><b>Select Associations,Communities or Groups Where Your Products will be Displayed</b></h4>
+	{% for assoc in my_groups%}
+
+    <input type="checkbox" class="form-check-input assoc_check mb-2" id="customCheckcolor{{assoc.myassociation.pk}}" name= "my-association" value= "{{assoc.myassociation.pk}}" >
+    {{assoc.myassociation.name}}
+	<br>
+
+	
+	{% endfor %}
+	
+	</div>
+	<br>
+	<div>
+	<h4><b>Business Cover Image</b></h4>
+	<input type="file" name="cover_image" accept="image/*" class="form-control " >
+	</div>
+	
+	
+	<button type="submit" class="btn btn-primary mt-2 text-center">Submit</button>
+	
+</form>
+{% else%}
+<h4>
+You must belong to atleast one Association, Group or Community of People</h4>
+{% endif%}
+
+										
+									
+										
+										
+										</div>
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+
+               
+{% block javascript %}
+<script >
+var limit = 3;
+$('input.assoc_check').on('click', function(evt) {
+	
+   if($(this).siblings(':checked').length >= limit) {
+       this.checked = false;
+   }
+});
+</script>
+{% endblock javascript %}        
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

@@ -1,0 +1,686 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+         <div class="container-fluid">
+                                                <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+							
+							<!-- Static Backdrop modal -->
+							<div class="mb-2 d-flex justify-content-end">
+<button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Add to My calendar
+</button>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Add Schedule to My Calendar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <form  method = "POST" enctype ="multipart/form-data" action ="" novalidate>
+								{% csrf_token %}
+{% include "account/form.html" %}
+                                 
+
+                                    <div class="mb-0  mt-2 text-center">
+                                        <button class="btn btn-primary" type="submit">Submit </button>
+                                    </div>
+
+                                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+							
+							
+							<div class="accordion" id="accordionExample">
+    <div class="card mb-0">
+        <div class="card-header" id="januaryhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#january"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="january">
+                    January
+                </a>
+            </h5>
+        </div>
+
+        <div id="january" class="collapse {% if  date_today|date:"F" == "January"%} show {%else%}{%endif%}"
+            aria-labelledby="januaryhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                        <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "January"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+           <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-0">
+        <div class="card-header" id="februaryhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#february"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="february">
+                    February
+                </a>
+            </h5>
+        </div>
+        <div id="february" class="collapse {% if  date_today|date:"F" == "February"%} show {%else%}{%endif%}" aria-labelledby="februaryhead"
+            data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "February"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-0">
+        <div class="card-header" id="marchhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#march"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="march">
+                    March
+                </a>
+            </h5>
+        </div>
+        <div id="march" class="collapse {% if  date_today|date:"F" == "March"%} show {%else%}{%endif%}"
+            aria-labelledby="marchhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "March"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	 <div class="card mb-0">
+        <div class="card-header" id="aprilhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#april"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="april">
+                    April
+                </a>
+            </h5>
+        </div>
+        <div id="april" class="collapse {% if  date_today|date:"F" == "April"%} show {%else%}{%endif%}"
+            aria-labelledby="aprilhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                 <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "April"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+	 <div class="card mb-0">
+        <div class="card-header" id="mayhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#may"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="may">
+                    May
+                </a>
+            </h5>
+        </div>
+        <div id="may" class="collapse {% if  date_today|date:"F" == "May"%} show {%else%}{%endif%}"
+            aria-labelledby="mayhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "May"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+           <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	 <div class="card mb-0">
+        <div class="card-header" id="junehead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#june"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="june">
+                    June
+                </a>
+            </h5>
+        </div>
+        <div id="june" class="collapse {% if  date_today|date:"F" == "June"%} show {%else%}{%endif%}"
+            aria-labelledby="junehead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "June"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+	 <div class="card mb-0">
+        <div class="card-header" id="julyhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#july"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="july">
+                    July
+                </a>
+            </h5>
+        </div>
+        <div id="july" class="collapse {% if  date_today|date:"F" == "July"%} show {%else%}{%endif%}"
+            aria-labelledby="julyhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "July"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	<div class="card mb-0">
+        <div class="card-header" id="augusthead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#august"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="august">
+                    August
+                </a>
+            </h5>
+        </div>
+        <div id="august" class="collapse {% if  date_today|date:"F" == "August"%} show {%else%}{%endif%}"
+            aria-labelledby="augusthead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "August"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+           <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	<div class="card mb-0">
+        <div class="card-header" id="septemberhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#september"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="september">
+                   September
+                </a>
+            </h5>
+        </div>
+        <div id="september" class="collapse {% if  date_today|date:"F" == "September"%} show {%else%}{%endif%}"
+            aria-labelledby="septemberhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "September"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+	<div class="card mb-0">
+        <div class="card-header" id="octoberhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#october"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="october">
+                   October
+                </a>
+            </h5>
+        </div>
+        <div id="october" class="collapse {% if  date_today|date:"F" == "October"%} show {%else%}{%endif%}"
+            aria-labelledby="octoberhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                 <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "October"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+		<div class="card mb-0">
+        <div class="card-header" id="novemberhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#november"
+                    {% if  date_today|date:"F" == "January" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="november">
+                  November
+                </a>
+            </h5>
+        </div>
+        <div id="november" class="collapse {% if  date_today|date:"F" == "November"%} show {%else%}{%endif%}"
+            aria-labelledby="novemberhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+                <div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "November"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	<div class="card mb-0">
+        <div class="card-header" id="decemberhead">
+            <h5 class="m-0">
+                <a class="custom-accordion-title collapsed d-block pt-2 pb-2"
+                    data-bs-toggle="collapse" href="#december"
+                    {% if  date_today|date:"F" == "December" %} aria-expanded="true" {%else%} aria-expanded="false" {%endif%} aria-controls="december">
+                  December
+                </a>
+            </h5>
+        </div>
+        <div id="december" class="collapse {% if  date_today|date:"F" == "December"%} show {%else%}{%endif%}"
+            aria-labelledby="decemberhead" data-bs-parent="#accordionExample">
+            <div class="card-body">
+			<div class="table-responsive">
+                <table class="table mb-0">
+                {%for calendar in mycalendars%}
+				{%if calendar.date|date:"F" == "December"%}
+	<thead>
+	
+        <tr>
+            <th scope="col">{{calendar.date|date:"l"}}</th>
+            <th colspan="text-right"colspan="3" scope="col">{{calendar.date|date:"F d Y" }}</th>
+            
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <th rowspan="3" scope="row">{{calendar.event_time}}</th>
+  
+        </tr>
+        <tr>
+           
+            <th colspan="3"><a href ="{% url 'editmycalendar' calendar.pk %}">{{calendar.event}}</a></th>
+            
+           
+        </tr>
+        <tr>
+            <td colspan="3" >{{calendar.description}}</td>
+           
+           
+        </tr>
+		 </tbody>
+		 {%endif%}
+		{%endfor%}
+		</table>
+				</div>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+	
+	
+	
+	
+</div>
+				 </div>	
+				 </div> 
+				  </div>
+                    <!-- container -->
+
+{% endblock%} 
+
+               
+{% block javascript %}
+ <script src="{% static 'account/jquery/jquery.js' %}"></script>
+<script src="{% static 'account/js/account/scripts.js' %}"></script>
+{% endblock javascript %}

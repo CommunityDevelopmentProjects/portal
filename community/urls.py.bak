@@ -1,0 +1,42 @@
+from django.urls import path
+from . import views
+
+
+urlpatterns = [
+   
+    path('activateassociation/',views.ActivategroupView,name ='activateassociation'),
+    path('activateassociation/',views.DeActivategroupView,name ='activateassociation'),
+    
+    
+    path('cprofile/',views.AssociationView,name ='cprofile'),
+    path('createassociation/',views.CreateAssociationView,name ='createassociation'),
+    path('editassociation/',views.EditAssociationView,name ='editassociation'),
+    
+    
+    
+    path('searchpublicassociation/',views.SearchPublicAssociationView,name ='searchpublicassociation'),
+    path('publicassociation/',views.PublicAssociationView,name ='publicassociation'),
+    path('joinassociation/',views.JoinAssociationView,name ='joinassociation'),
+    path('searchmyassociation/',views.SearchPublicAssociationView,name ='searchmyassociation'),
+    path('myassociation/',views.MyAssociationView,name ='myassociation'),
+    path('cleaders/',views.AssociationLeadersView,name ='cleaders'),
+    path('setleader<user_id>/',views.SetLeadersView,name ='setleader'),
+    
+    
+    path('searchmember/',views.SearchMembersView,name ='searchmember'),
+    path('addmember/',views.AddMemberGroup,name ='addmember'),
+    path('members/',views.MembersView,name ='members'),
+    path('member/',views.MemberView,name ='member'),
+    path('confirm/',views.RemoveMembersConfirmView,name ='confirm'),
+    path('removemember/',views.RemoveMembersView,name ='removemember'),
+   
+   
+    path('searchinnercommunities/',views.SearchInnerAssociationView,name ='searchinnercommunities'),
+    path('innercommunities/',views.InnerAssociationView,name ='innercommunities'),
+    path('removecomm/',views.RemoveAssocView,name ='removecomm'),
+    path('deletecomm/',views.RemoveAssocConfirmView,name ='deletecomm'),
+    
+    path('approvecomm/',views.ApproveAssocView,name ='approvecomm'),
+    path('disapprovecomm/',views.DisapproveAssocView,name ='disapprovecomm'),
+    
+]

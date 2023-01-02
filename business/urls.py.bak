@@ -1,0 +1,49 @@
+from django.urls import path
+from . import views
+
+
+urlpatterns = [
+   
+    path('createbusiness/',views.CreateNewBusiness,name ='createbusiness'),
+    path('editbusiness/',views.EditBusiness,name ='editbusiness'),
+    path('deletebusiness/',views.DeleteBusiness,name ='deletebusiness'),
+    path('business/',views.Businessview,name ='business'),
+   
+    path('categorysess/',views.CreateCategorySession,name ='categorysess'),
+    path('addproduct/',views.AddProductView,name ='addproduct'),
+    path('editproduct/<product_id>/',views.EditProductView,name ='editproduct'),
+    path('product/<product_id>/',views.ViewProductView,name ='product'),
+    path('deleteproduct/',views.DeleteProductView,name ='deleteproduct'),
+    path('deleteproductajax/',views.DeleteProductSessionView,name ='deleteproductajax'),
+    
+    
+    path('market/',views.Marketview,name ='market'),
+    path('searchproductmarket/',views.SearcMarketProductView,name ='searchproductmarket'),
+    
+    path('shop/',views.Shopview,name ='shop'),
+    path('shopsess/',views.Product_idSessionView,name ='shopsess'),
+       
+    path('businesses/',views.AllbusinessView,name ='businesses'),
+    path('businessessess/',views.AllBusinessSessionView,name ='businessessess'),
+    
+    path('cbusiness/',views.SeebusinessView,name ='cbusiness'),
+    path('cbusinesssess/',views.SeeBusinessSessionView,name ='cbusinesssess'),
+    
+    path('cart/',views.CartView,name ='cart'),
+    path('addcart/',views.AddtoCartView,name ='addcart'),
+    path('removefromcart/',views.RemoveFomCartView,name ='removefromcart'),
+    path('calculatecart/',views.CalculateCartView,name ='calculatecart'),
+    
+    path('checkout/',views.CheckOutView,name ='checkout'),
+    path('fcheckout/',views.fCheckoutView,name ='fcheckout'),
+    
+    path('myorders/',views.MyOrdersView,name ='myorders'),
+    path('confirmmyorders/',views.ConfirmMyOrdersView,name ='confirmmyorders'),
+    path('cancelmyorder/',views.RemoveFomCartView,name ='cancelmyorder'),
+    
+    path('orders/',views.BusinessOrdersView,name ='orders'),
+    path('confirmorderssess/',views.ConfirmBusinessOrdersSessionView,name ='confirmorderssess'),
+    path('confirmorders/',views.ConfirmBusinessOrdersView,name ='confirmorders'),
+    path('editorder/',views.EditBusinessOrdersView,name ='editorder'),
+    
+]

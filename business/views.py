@@ -1,0 +1,987 @@
+from django.shortcuts import render, redirect,redirect,get_object_or_404
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import JsonResponse
+from account.models import Profile
+from django.views.decorators.csrf import csrf_exempt
+from .models import Business,Products,Business_Product_Categories,Orders
+from .forms import createProductForm,ConfirmOrderForm
+from django.db.models import Q,Sum,Count
+from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
+import json
+from django.contrib.auth import get_user_model
+
+
+import os
+User = get_user_model()
+
+@login_required(login_url = 'logout')
+def Businessview(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    products = []
+    business = []
+    categories = []
+    form = createProductForm()
+    
+    try:
+        
+        business = Business.objects.get(business_owner = current_user)
+        products = Products.objects.filter(business_p = business)
+        categories = Business_Product_Categories.objects.filter(business_cat = business)
+        
+    except:
+        pass
+       
+        
+        
+   
+    return render(request,'account/business/business.html',{'form':form,'products':products,'business':business,'categories':categories})
+    
+    
+
+
+    
+@login_required(login_url = 'logout')
+def CreateNewBusiness(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    
+    formerrors = []
+    if request.method == 'POST':
+        print('POST')
+        if request.POST.getlist('my-association'):
+            myassocs = request.POST.getlist('my-association')
+            if len(myassocs) ==1:
+                business_assoc1 = myassocs[0]
+                business_assoc2 = 0
+                business_assoc3 = 0
+            elif len(myassocs) ==2:
+                business_assoc1 = myassocs[0]
+                business_assoc2 = myassocs[1]
+               
+                business_assoc3 = 0
+            elif len(myassocs) == 3:
+                business_assoc1 = myassocs[0]
+                business_assoc2 = myassocs[1]
+                business_assoc3 = myassocs[2]
+                
+            else:
+                pass
+       
+        else:
+            print('POST')
+            formerrors = 'Atleast one Community,Association or Group is required'
+            return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+        if request.POST.get('business_name'):
+            business_name =request.POST.get('business_name')
+        else:
+            formerrors = 'Business Name is required'
+            return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+        if request.POST.get('business_contacts'):
+            business_contacts = request.POST.get('business_contacts')
+        else:
+            formerrors = 'Business Contacts Are Required'
+            return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+        if request.POST.get('business_address'):
+            business_address = request.POST.get('business_address')
+        else:
+            formerrors = 'Business Address is Required '
+            return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+        if request.POST.get('about_business'):
+            about_business = request.POST.get('about_business')
+        else:
+            formerrors = 'Short Notes About Your Business is Required'
+            return render(request,'account/business/create_business.html',{'formerrors':formerrors})    
+        if request.POST.get('business_slogan'):
+            business_slogan = request.POST.get('business_slogan')
+        else:
+            business_slogan = ''   
+
+        if request.POST.get('shipping_area'):
+            shipping_area = request.POST.get('shipping_area')
+        else:
+            shipping_area = 'none'
+
+        if request.POST.get('shipping_fee'):
+            shipping_fee = request.POST.get('shipping_fee')
+        else:
+            shipping_fee = 'none'        
+        if request.FILES.get('cover_image'):
+            cover_image = request.FILES.get('cover_image')
+        else:
+            cover_image = ''    
+        if formerrors:
+            return render(request,'account/business/create_business.html',{'formerrors':formerrors})   
+        else:
+            try:
+                imthere = Business.objects.get(business_owner = current_user)
+                formerrors = 'Nobody is allowed to open more than one Business'
+                return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+            except:
+                if request.POST.getlist('product_category'):
+                    categories = request.POST.getlist('product_category')
+                     
+                    if len(categories) >= 1:
+                        pass
+                    else:
+                        formerrors = 'Your Business Must Have Atleats One Product Category'
+                        return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+               
+                else:
+                    formerrors = 'Your Business Must Have Atleats One Product Category'
+                    return render(request,'account/business/create_business.html',{'formerrors':formerrors})
+                    
+                mybusiness = Business(cover_image=cover_image,business_owner = current_user,about_business = about_business,
+                business_assoc3= business_assoc3, business_assoc2=business_assoc2,business_assoc1=business_assoc1,
+                shipping_area = shipping_area,shipping_fee = shipping_fee,business_slogan = business_slogan,
+                business_name = business_name,business_contacts = business_contacts,business_address = business_address)
+                mybusiness.save()
+                if request.POST.getlist('product_category'):
+                    categories = request.POST.getlist('product_category')
+                     
+                    if len(categories) >= 1:
+                        for category in categories:
+                            mybusiness
+                            bcat = Business_Product_Categories(business_cat = mybusiness,business_category = category)
+                            bcat.save()
+                    else:
+                        pass
+               
+                else:
+                    pass
+                return redirect('business')
+    return render(request,'account/business/create_business.html',{'formerrors':formerrors})   
+
+
+
+
+@login_required(login_url = 'logout')
+def EditBusiness(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    business = Business.objects.get(business_owner = current_user)
+    products = Products.objects.filter(business_p = business)
+    categories = Business_Product_Categories.objects.filter(business_cat = business)
+    formerrors = []
+    if request.method == 'POST':
+        print('POST')
+        if request.POST.getlist('my-association'):
+            myassocs = request.POST.getlist('my-association')
+            if len(myassocs) ==1:
+                business.business_assoc1 = myassocs[0]
+                business.business_assoc2 = 0
+                business.business_assoc3 = 0
+            elif len(myassocs) ==2:
+                business.business_assoc1 = myassocs[0]
+                business.business_assoc2 = myassocs[1]
+               
+                business.business_assoc3 = 0
+            elif len(myassocs) == 3:
+                business.business_assoc1 = myassocs[0]
+                business.business_assoc2 = myassocs[1]
+                business.business_assoc3 = myassocs[2]
+                
+            else:
+                pass
+       
+        else:
+            
+            formerrors = 'Atleast one Community,Association or Group is required'
+            return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+        if request.POST.get('business_name'):
+            business.business_name =request.POST.get('business_name')
+        else:
+            formerrors = 'Business Name is required'
+            return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+        if request.POST.get('business_contacts'):
+            business.business_contacts = request.POST.get('business_contacts')
+        else:
+            formerrors = 'Business Contacts Are Required'
+            return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+        if request.POST.get('business_address'):
+            business.business_address = request.POST.get('business_address')
+        else:
+            formerrors = 'Business Address is Required '
+            return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+        if request.POST.get('about_business'):
+            business.about_business = request.POST.get('about_business')
+        else:
+            formerrors = 'Short Notes About Your Business is Required'
+            return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories})     
+        if request.POST.get('business_slogan'):
+            business.business_slogan = request.POST.get('business_slogan')
+        else:
+            business.business_slogan = ''   
+
+        if request.POST.get('shipping_area'):
+            business.shipping_area = request.POST.get('shipping_area')
+        else:
+            business.shipping_area = 'none'
+
+        if request.POST.get('shipping_fee'):
+            business.shipping_fee = request.POST.get('shipping_fee')
+        else:
+            business.shipping_fee = 'none'        
+        if request.FILES.get('cover_image'):
+            business.cover_image = request.FILES.get('cover_image')
+        else:
+            pass   
+        if formerrors:
+            return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories})   
+        else:
+            
+            if request.POST.getlist('product_category'):
+                categories = request.POST.getlist('product_category')
+                     
+                if len(categories) >= 1:
+                    pass
+                else:
+                    formerrors = 'Your Business Must Have Atleats One Product Category'
+                    return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+               
+            else:
+                formerrors = 'Your Business Must Have Atleats One Product Category'
+                return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+                    
+                
+            business.save()
+            if request.POST.getlist('product_category'):
+                categories = request.POST.getlist('product_category')
+                     
+                if len(categories) >= 1:
+                    print(len(categories)) 
+                    categoriez = Business_Product_Categories.objects.filter(business_cat = business)
+                    for cat in categoriez:
+                        cat.delete()
+                    for category in categories:
+                        print(category)    
+                        bcat = Business_Product_Categories(business_cat = business,business_category = category)
+                        bcat.save()
+                    return redirect('business')
+                else:
+                    formerrors = 'Your Business Must Have Atleats One Product Category'
+                    return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+                    
+               
+            else:
+                formerrors = 'Your Business Must Have Atleats One Product Category'
+                return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+                    
+    return render(request,'account/business/business.html',{'formerrors':formerrors,'products':products,'business':business,'categories':categories}) 
+ 
+ 
+@login_required(login_url = 'logout')
+def DeleteBusiness(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    if request.method == 'POST':
+    
+        business = Business.objects.get(business_owner = current_user)
+        business.delete()
+        
+    return redirect('profile')
+    
+         #### ADD PRODUCTS TO THE BUSINESS ####
+         
+@login_required(login_url = 'logout')    
+def CreateCategorySession(request):
+   
+    if request.method == 'POST':
+       
+       messagess = json.loads(request.body)
+       
+       request.session['categorySession'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False) 
+         
+         
+@login_required(login_url = 'logout')          
+def AddProductView(request):
+    form = createProductForm()
+    
+    if request.method == 'POST':
+         #pass form for validation
+        
+        form = createProductForm(request.POST,request.FILES)
+        #if form is valid and cleaned
+        if form.is_valid():
+            
+            
+            current_user = get_object_or_404(Profile,user_p = request.user)
+            business_p = Business.objects.get(business_owner = current_user)
+            product_brand_name = form.cleaned_data['product_brand_name']
+            product_generic_name= form.cleaned_data['product_generic_name']
+            product_packaging= form.cleaned_data['product_packaging']
+            product_quantity= form.cleaned_data['product_quantity']
+            product_price= form.cleaned_data['product_price']
+            product_availability= form.cleaned_data['product_availability']
+            product_description= form.cleaned_data['product_description']
+            product_color= form.cleaned_data['product_color']
+            product_old_price= form.cleaned_data['product_old_price']
+            product_category= request.session['categorySession']
+            if request.FILES.getlist('product_images'):
+                
+                images = request.FILES.getlist('product_images')
+                if len(images)  >=3:
+                    image1 = images[0]
+                    image2 = images[1]
+                    image3 = images[2]
+                    Product= Products(
+                    product_brand_name=product_brand_name,product_generic_name = product_generic_name,product_packaging = product_packaging,
+                    product_quantity= product_quantity, product_price=product_price,product_description= product_description,
+                    product_availability= product_availability, product_color=product_color,product_old_price= product_old_price,
+                    product_category= product_category, image1=image1,image2=image2,image3=image3,business_p=business_p
+                    )
+                    Product.save()
+                    return redirect('business')
+                elif len(images) == 2:
+                    image1 = images[0]
+                    image2 = images[1]
+                    Product= Products(
+                    product_brand_name=product_brand_name,product_generic_name = product_generic_name,product_packaging = product_packaging,
+                    product_quantity= product_quantity, product_price=product_price,product_description= product_description,
+                    product_availability= product_availability, product_color=product_color,product_old_price= product_old_price,
+                    product_category= product_category, image1=image1,image2=image2,business_p=business_p
+                    )
+                    Product.save()
+                    return redirect('business')
+                elif len(images) == 1:
+                    image1 = images[0]
+                    Product= Products(
+                    product_brand_name=product_brand_name,product_generic_name = product_generic_name,product_packaging = product_packaging,
+                    product_quantity= product_quantity, product_price=product_price,product_description= product_description,
+                    product_availability= product_availability, product_color=product_color,product_old_price= product_old_price,
+                    product_category= product_category, image1=image1,business_p=business_p
+                    )
+                    Product.save()
+                    return redirect('business')
+            else:    
+                 
+                Product= Products(
+                product_brand_name=product_brand_name,product_generic_name = product_generic_name,product_packaging = product_packaging,
+                product_quantity= product_quantity, product_price=product_price,product_description= product_description,
+                product_availability= product_availability, product_color=product_color,product_old_price= product_old_price,
+                product_category= product_category,business_p=business_p
+                )
+                Product.save()
+                return redirect('business')
+            
+        else:
+           
+            return redirect('business') 
+        
+        
+    return redirect('business') 
+             
+             
+ ####ADD PRODUCTS ###            
+@login_required(login_url = 'logout')          
+def EditProductView(request,product_id):
+    product = Products.objects.get(pk = product_id)
+    form = createProductForm(instance = product)
+    
+    if request.method == 'POST':
+         #pass form for validation
+        
+        form = createProductForm(request.POST,request.FILES,instance = product)
+        #if form is valid and cleaned
+        if form.is_valid():
+            
+            product.product_brand_name = form.cleaned_data['product_brand_name']
+            product.product_generic_name= form.cleaned_data['product_generic_name']
+            product.product_packaging= form.cleaned_data['product_packaging']
+            product.product_quantity= form.cleaned_data['product_quantity']
+            product.product_price= form.cleaned_data['product_price']
+            product.product_availability= form.cleaned_data['product_availability']
+            product.product_description= form.cleaned_data['product_description']
+            product.product_color= form.cleaned_data['product_color']
+            product.product_old_price= form.cleaned_data['product_old_price']
+          
+            if request.FILES.getlist('product_images'):
+                
+                images = request.FILES.getlist('product_images')
+                if len(images)  >=3:
+                    product.image1 = images[0]
+                    product.image2 = images[1]
+                    product.image3 = images[2]
+                    product.save()
+                    return redirect('business')
+                elif len(images) == 2:
+                    product.image1 = images[0]
+                    product.image2 = images[1]
+                    product.save()
+                    return redirect('business')
+                elif len(images) == 1:
+                    product.image1 = images[0]
+                    
+                    product.save()
+                    return redirect('business')
+            else:    
+                 
+                product.save()
+                return redirect('business')
+            
+        else:
+           
+            return render(request,'account/business/edit_product.html',{'form':form,'product':product}) 
+        
+        
+    return render(request,'account/business/edit_product.html',{'form':form,'product':product})               
+    
+    
+####Single PRODUCT ###            
+@login_required(login_url = 'logout')          
+def ViewProductView(request,product_id):
+    product = Products.objects.get(pk = product_id)
+  
+    return render(request,'account/business/product.html',{'product':product})                   
+
+
+   
+@login_required(login_url = 'logout')     
+def DeleteProductSessionView(request):
+    if request.method == 'POST':
+       
+       messagess = json.loads(request.body)
+       
+       request.session['DeleteProduct'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)     
+               
+@login_required(login_url = 'logout')                 
+def DeleteProductView(request):
+         
+    if request.method == 'POST':
+      
+        if 'DeleteProduct' in request.session:
+            product_id =request.session['DeleteProduct']
+            product = Products.objects.get(pk=product_id)
+            product.delete()
+            del request.session['DeleteProduct']
+            return redirect('business')
+    else:
+        return redirect('business')
+    return redirect('business')               
+    
+    
+    
+####MARKET ###  
+@login_required(login_url = 'logout')    
+def SearcMarketProductView(request):
+   
+    if request.method == 'POST':
+       
+       messagess = json.loads(request.body)
+       request.session['searchmarketproduct'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)   
+          
+@login_required(login_url = 'logout')          
+def Marketview(request):
+    if 'activegroupbackend' in request.session:
+        current_user = get_object_or_404(Profile,user_p = request.user)
+        
+        incart = Orders.objects.filter(order_by = current_user,order_no = 0)
+       
+        if  'searchmarketproduct' in request.session:
+            product = Products.objects.filter(
+        Q(business_p__business_assoc1 = request.session['activegroupbackend'])| Q(business_p__business_assoc2 = request.session['activegroupbackend'])| Q(business_p__business_assoc3 = request.session['activegroupbackend'])
+        ).filter(
+         Q(product_brand_name__icontains = request.session['searchmarketproduct']) |Q(product_generic_name__icontains = request.session['searchmarketproduct']) ).order_by('id')
+            del request.session['searchmarketproduct']
+            page = request.GET.get('page',1)
+            paginator = Paginator(product,8)
+            try:
+                allproducts = paginator.page(page)
+            except PageNotAnInteger:
+                allproducts = paginator.page(1)
+            except EmptyPage:
+                allproducts = paginator.page(paginator.num_pages)
+        else:
+            product = Products.objects.filter(
+        Q(business_p__business_assoc1 = request.session['activegroupbackend'])| Q(business_p__business_assoc2 = request.session['activegroupbackend'])| Q(business_p__business_assoc3 = request.session['activegroupbackend'])
+        )
+            page = request.GET.get('page',1)
+            paginator = Paginator(product,8)
+            try:
+                allproducts = paginator.page(page)
+            except PageNotAnInteger:
+                allproducts = paginator.page(1)
+            except EmptyPage:
+                allproducts = paginator.page(paginator.num_pages)
+            
+    
+    
+        
+       
+    else:
+        return redirect('logout')
+    prod =  'login'   
+    return render(request,'account/business/market.html',{'allproducts':allproducts,'incart':incart,'prod':prod})
+    
+    
+    
+###SHOP####
+@login_required(login_url = 'login')    
+def Product_idSessionView(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        if  'Product_idSession' in request.session:
+            del request.session['Product_idSession']
+        request.session['Product_idSession'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)  
+
+
+@login_required(login_url = 'logout')
+def Shopview(request):
+    if 'activegroupbackend' in request.session:
+        
+        current_user = get_object_or_404(Profile,user_p = request.user)
+        
+        incart = Orders.objects.filter(order_by = current_user,order_no = 0)
+       
+        
+        if  'Product_idSession' in request.session:
+            product_id = request.session['Product_idSession']
+            product = Products.objects.get(id = product_id)
+            
+            request.session['Shop'] = product.business_p.id
+        else:
+            product = []
+            
+        if  'searchmarketproduct' in request.session:
+            searched = 'Shop'
+                
+            products = Products.objects.filter(
+            Q(business_p__id = request.session['Shop'])
+            ).filter(
+             Q(product_brand_name__icontains = request.session['searchmarketproduct']) 
+             |Q(product_generic_name__icontains = request.session['searchmarketproduct']) ).order_by('id')
+         
+            del request.session['searchmarketproduct']
+            page = request.GET.get('page',1)
+            paginator = Paginator(products,8)
+            try:
+                allproducts = paginator.page(page)
+            except PageNotAnInteger:
+                allproducts = paginator.page(1)
+            except EmptyPage:
+                allproducts = paginator.page(paginator.num_pages)
+        else:
+            products = Products.objects.filter(Q(business_p__id = request.session['Shop']))
+            page = request.GET.get('page',1)
+            paginator = Paginator(products,8)
+            try:
+                allproducts = paginator.page(page)
+            except PageNotAnInteger:
+                allproducts = paginator.page(1)
+            except EmptyPage:
+                allproducts = paginator.page(paginator.num_pages)    
+            searched = []
+            
+            
+    else:
+        return redirect('logout')
+    return render(request,'account/business/shop.html',{'searched':searched,'incart':incart,'product':product,'allproducts':allproducts})
+     
+     
+     
+     
+################BUSINESS ###########################
+@login_required(login_url = 'logout')    
+def AllBusinessSessionView(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        if  'searchmarketbusiness' in request.session:
+            del request.session['searchmarketbusiness']
+        request.session['searchmarketbusiness'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)  
+
+
+
+
+
+
+@login_required(login_url = 'logout')
+def AllbusinessView(request):
+    if 'activegroupbackend' in request.session:
+        if  'searchmarketbusiness' in request.session:
+            businesses = Business.objects.filter(
+        Q(business_assoc1 = request.session['activegroupbackend'])| Q(business_assoc2 = request.session['activegroupbackend'])| Q(business_assoc3 = request.session['activegroupbackend'])
+        ).filter(business_name__icontains = request.session['searchmarketbusiness']).order_by('id')
+            del request.session['searchmarketbusiness']
+            page = request.GET.get('page',1)
+            paginator = Paginator(businesses,2)
+            try:
+                allbusinesses = paginator.page(page)
+            except PageNotAnInteger:
+                allbusinesses = paginator.page(1)
+            except EmptyPage:
+                allbusinesses = paginator.page(paginator.num_pages)
+        else:
+            businesses = Business.objects.filter(
+        Q(business_assoc1 = request.session['activegroupbackend'])| Q(business_assoc2 = request.session['activegroupbackend'])| Q(business_assoc3 = request.session['activegroupbackend'])
+        )
+            page = request.GET.get('page',1)
+            paginator = Paginator(businesses,2)
+            try:
+                allbusinesses = paginator.page(page)
+            except PageNotAnInteger:
+                allbusinesses = paginator.page(1)
+            except EmptyPage:
+                allbusinesses = paginator.page(paginator.num_pages)
+            
+    
+    
+    else:
+        return redirect('login')
+    busi =    'login' 
+    return render(request,'account/business/allbusiness.html',{'busi':busi,'allbusinesses':allbusinesses}) 
+    
+    
+         
+
+
+@login_required(login_url = 'logout')    
+def SeeBusinessSessionView(request):
+   
+    if request.method == 'POST':
+       
+        messagess = json.loads(request.body)
+        if  'seebusiness' in request.session:
+            del request.session['seebusiness']
+        request.session['seebusiness'] = messagess
+   
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)  
+
+
+
+
+
+
+@login_required(login_url = 'logout')
+def SeebusinessView(request):
+    if 'activegroupbackend' in request.session:
+        current_user = get_object_or_404(Profile,user_p = request.user)
+        
+        incart = Orders.objects.filter(order_by = current_user,order_no = 0)
+       
+        if  'seebusiness' in request.session:
+            business = Business.objects.get(pk = request.session['seebusiness'])
+            categories = Business_Product_Categories.objects.filter(business_cat__id = request.session['seebusiness'])
+        if  'searchmarketproduct' in request.session:
+            searched = 'Shop'
+                
+            products = Products.objects.filter(
+            Q(business_p__id = request.session['seebusiness'])
+            ).filter(
+             Q(product_brand_name__icontains = request.session['searchmarketproduct']) 
+             |Q(product_generic_name__icontains = request.session['searchmarketproduct']) ).order_by('id')
+         
+            del request.session['searchmarketproduct']
+            page = request.GET.get('page',1)
+            paginator = Paginator(products,8)
+            try:
+                allproducts = paginator.page(page)
+            except PageNotAnInteger:
+                allproducts = paginator.page(1)
+            except EmptyPage:
+                allproducts = paginator.page(paginator.num_pages)
+        else:
+            products = Products.objects.filter(Q(business_p__id = request.session['seebusiness']))
+            page = request.GET.get('page',1)
+            paginator = Paginator(products,8)
+            try:
+                allproducts = paginator.page(page)
+            except PageNotAnInteger:
+                allproducts = paginator.page(1)
+            except EmptyPage:
+                allproducts = paginator.page(paginator.num_pages)    
+            searched = 'Shop'  
+    
+    
+    else:
+        return redirect('login')
+    busi =    'login' 
+    return render(request,'account/business/seeshop.html',{'categories':categories,'incart':incart,'business':business,'allproducts':allproducts}) 
+    
+    
+                                            ##################CART ######################
+@login_required(login_url = 'logout')    
+def AddtoCartView(request):
+   
+    if request.method == 'POST':
+        current_user = get_object_or_404(Profile,user_p = request.user)
+        messagess = json.loads(request.body)
+        try:
+            item = Orders.objects.get(order_by =current_user,order_product__pk =messagess,buyer_status = False)
+            message_list = [{
+      
+        'message':'none',
+      
+    }]
+   
+            return JsonResponse(message_list,safe=False)  
+        except:
+            
+            product = Products.objects.get(pk = messagess)
+            order_product = product
+            order_by  = current_user
+            quantity = product.product_quantity
+            price = product.product_price
+            total_price = product.product_price
+            Orders.objects.create(order_product=order_product,order_by=order_by,quantity=quantity,price=price,total_price=total_price)
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)  
+                                           
+    
+@login_required(login_url = 'logout')
+def CartView(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    carts = Orders.objects.filter(order_by =current_user,buyer_status = False)
+    total_cost = 0
+    for cart in carts:
+        total_cost += cart.total_price
+    return render(request,'account/business/cart.html',{'carts':carts,'total_cost':total_cost}) 
+        
+
+@login_required(login_url = 'logout')    
+def RemoveFomCartView(request):
+   
+    if request.method == 'POST':
+        
+        messagess = json.loads(request.body)
+        item = Orders.objects.get(pk=messagess)
+        item.delete()
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)  
+
+@login_required(login_url = 'logout')    
+def CalculateCartView(request):
+   
+    if request.method == 'POST':
+        
+        messagess = json.loads(request.body)
+        
+        item_id = messagess['itemid']
+        newquantity = messagess['quantity']
+        item = Orders.objects.get(pk=item_id)
+        
+        oldprice = item.price
+        newprice = int(oldprice)*int(newquantity)
+        
+        item.quantity = newquantity
+        
+        item.total_price = newprice
+        item.save()
+        current_user = get_object_or_404(Profile,user_p = request.user)
+        carts = Orders.objects.filter(order_by =current_user,buyer_status = False)
+        total_cost = 0
+        for cart in carts:
+            total_cost += cart.total_price
+    
+    message_list = [{
+      
+        'total_price':newprice,
+        'newquantity':newquantity,
+        'total_cost':total_cost,
+        'grand_cost':total_cost,
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)    
+
+
+
+@login_required(login_url = 'logout')    
+def CheckOutView(request):
+   
+    if request.method == 'POST':
+        
+        messagess = json.loads(request.body)
+        current_user = get_object_or_404(Profile,user_p = request.user)
+
+        last_order = Orders.objects.filter(order_by =current_user,buyer_status = True).order_by('-id')
+        if last_order:
+            last_order = last_order[0]
+            order_no = int(last_order.order_no)+1
+            Orders.objects.filter(order_by =current_user,buyer_status = False).update(buyer_status = False,order_no =order_no)
+        else:
+            Orders.objects.filter(order_by =current_user,buyer_status = False).update(buyer_status = False,order_no =1)
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)      
+    
+    
+    
+@login_required(login_url = 'logout')
+def fCheckoutView(request):
+    
+    return render(request,'account/business/checkout.html')    
+    
+    
+@login_required(login_url = 'logout')
+def MyOrdersView(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    orders = Orders.objects.filter(order_by =current_user).order_by('-id')
+    return render(request,'account/business/myorders.html',{'orders':orders})    
+
+
+@login_required(login_url = 'logout')
+def BusinessOrdersView(request):
+    current_user = get_object_or_404(Profile,user_p = request.user)
+    orders = Orders.objects.filter(order_product__business_p__business_owner =current_user).order_by('-id')
+    form2 = ConfirmOrderForm()
+    return render(request,'account/business/orders.html',{'form2':form2,'orders':orders})     
+    
+    
+    
+@login_required(login_url = 'logout')    
+def ConfirmBusinessOrdersSessionView(request):
+   
+    if request.method == 'POST':
+        
+        messagess = json.loads(request.body)
+
+        request.session['businessorder'] = messagess
+       
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)    
+
+@login_required(login_url = 'logout')    
+def ConfirmBusinessOrdersView(request):
+   
+    if request.method == 'POST':
+        order = Orders.objects.get(pk = request.session['businessorder']) 
+        form = ConfirmOrderForm(request.POST,instance = order)
+        #if form is valid and cleaned
+        if form.is_valid():
+            if form.cleaned_data['order_payement_mode'] == 'Not Paid':
+                return redirect('orders')
+            else:
+                order.order_payement_mode = form.cleaned_data['order_payement_mode']
+                order.order_transaction_id = form.cleaned_data['order_transaction_id']
+                order.seller_status = True
+                order.save()
+        return redirect('orders')    
+    return redirect('orders')
+
+
+@login_required(login_url = 'logout')    
+def EditBusinessOrdersView(request):
+    order = Orders.objects.get(pk = request.session['businessorder']) 
+    form = ConfirmOrderForm(instance = order)
+    if request.method == 'POST':
+        
+        form = ConfirmOrderForm(request.POST,instance = order)
+        #if form is valid and cleaned
+        if form.is_valid():
+            if form.cleaned_data['order_payement_mode'] == 'Not Paid':
+                return redirect('orders')
+            else:
+                order.buyer_status = False
+                order.balance = 0
+                order.save()
+                form.save()
+                return redirect('orders')
+        else:        
+            return render(request,'account/business/editorder.html',{'form':form,'order':order})         
+    return render(request,'account/business/editorder.html',{'form':form,'order':order})     
+
+
+@login_required(login_url = 'logout')    
+def ConfirmMyOrdersView(request):
+   
+    if request.method == 'POST':
+        
+        messagess = json.loads(request.body)
+
+        order = Orders.objects.get(pk =messagess)
+        order.buyer_status = True
+        order.balance = order.total_price - order.amount_paid
+        order.save()
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)   
+    
+    
+@login_required(login_url = 'logout')    
+def ConfirmRecievedOrderView(request):
+   
+    if request.method == 'POST':
+        
+        messagess = json.loads(request.body)
+
+        order = Orders.objects.get(pk =messagess)
+        order.recieved_status = True
+        order.save()
+    message_list = [{
+      
+        'message':'success',
+      
+    }]
+   
+    return JsonResponse(message_list,safe=False)       

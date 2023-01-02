@@ -1,0 +1,250 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                     <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hyper</a></li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">eCommerce</a></li>
+                                            <li class="breadcrumb-item active">Shopping Cart</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Shopping Cart</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-8">
+											
+                                                
+
+                                               
+
+<div class="card">
+         <h3 class="text-center text-success">Thank You So Much  </h3> 
+		 <h5 class="text-center text-success">Your order is recieved, we going to contact you soon</h5>
+</div>
+
+                                                <!-- action buttons-->
+                                                <div class="row mt-4">
+                                                    <div class="col-sm-6">
+                                                        <a href="{% url 'market' %}" class="btn text-muted m-2 d-sm-inline-block btn-link fw-semibold">
+                                                            <i class="mdi mdi-arrow-left"></i> Continue Shopping </a>
+                                                    </div> <!-- end col -->
+													
+                                                   
+												
+                                                </div> <!-- end row-->
+                                            </div>
+                                            <!-- end col -->
+
+                                           
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+function RemoveItem(id){
+	message = id
+	
+	
+	fetch("{% url 'removefromcart' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+function CheckOut(id){
+	message = id
+	
+	
+	fetch("{% url 'checkout' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+function ItemQuantity(id){
+	
+	let addtotal_price = "total-price".concat(id)
+	
+	let addquantity = "quantity".concat(id)
+	
+	
+	let total_price = document.getElementById(addtotal_price);
+	
+	let quantity = document.getElementById(addquantity);
+	quantity_value = quantity.value
+	let grand_cost = document.getElementById("grand-cost")
+	let total_cost = document.getElementById("total-cost")
+	let message = {itemid:id, quantity:quantity_value};
+	fetch("{% url 'calculatecart' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			
+				total_price.innerHTML = message.total_price
+				grand_cost.innerHTML = message.grand_cost
+				total_cost.innerHTML = message.total_cost
+				quantity.value = message.newquantity
+		}
+	});
+	
+	
+	
+}
+
+
+
+
+function Product(id){
+	message = id
+	
+	
+	fetch("{% url 'shopsess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

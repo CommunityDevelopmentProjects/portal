@@ -1,0 +1,182 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                          
+                                            <li class="breadcrumb-item active">Community Profile</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Community Profile</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- Profile -->
+                                <div class="card bg-primary">
+                                    <div class="card-body profile-user-box">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <div class="avatar-lg">
+                                                            <img src={% if active_group.myassociation.profile_image %} "{{active_group.myassociation.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="" class="rounded-circle img-thumbnail">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div>
+                                                           <h4 class="mt-1 mb-1 text-white">{% if active_group%} {{active_group.myassociation.name}}{% endif %}</h4>
+                                                            <p class="font-13 text-white-50">{% if active_group%}
+															{%if active_group.myassociation.motto%}
+															{{active_group.myassociation.motto}}
+															{%else%}
+															Strong Together
+															{%endif%}
+															{% endif %}</p>
+                                                            <ul class="mb-0 list-inline text-light">
+															<!--
+                                                                <li class="list-inline-item me-3">
+                                                                    <h5 class="mb-1">$ 25,184</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Total Revenue</p>
+                                                                </li>
+																-->
+                                                                <li class="list-inline-item">
+                                                                    <h5 class="mb-1">5482</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Number of Orders</p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col-->
+													
+                                            
+                                        </div> <!-- end row -->
+
+                                    </div> <!-- end card-body/ profile-user-box-->
+                                </div><!--end profile/ card -->
+                            </div> <!-- end col-->
+                        </div>
+                        <!-- end row -->
+
+
+                        <div class="row">
+                            
+                            <div class="col-xl-8">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+
+
+                               
+								
+								<div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3 text-center">Set Our Cabinet</h4>
+									<div class="row">
+									{% if leaders %}
+									{% for leader in leaders %}
+									<div class="col-6 col-sm-4 col-md-3">
+										<div class="card rounded-top">
+											
+											<img src={% if leader.member.profile_image%} "{{leader.member.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%}
+											alt="image" class="img-fluid img-thumbnail mx-auto d-block rounded-circle" width="120"/>
+											<p class="text-center mb-0">{{leader.member.user_p.user_name}}</p>
+											<p class="text-center text-success mb-1"><b>{{leader.position}}</b></p>
+											<a href="{% url 'setleader' leader.member.user_p.phone_number %}" class="text-center text-success mb-1">
+											<button type="button" class="btn btn-outline-success btn-rounded"> Set Leader</button></a>
+										</div>
+										
+										</div>
+										{% endfor %}
+								{% endif %}
+										
+										
+									
+										
+										
+										</div>
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+
+               
+{% block javascript %}
+<script>
+let message_send_btn = document.getElementById('send-button');
+let message_input = document.getElementById('message-input');
+
+function send_message(){
+	let message = message_input.value
+	console.log(message)
+	if (message === ''){
+		return;
+	}
+	message_input.value = ''
+	fetch("{% url 'cprofile' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			construt_message(message);
+		}
+	});
+}
+
+</script>
+{% endblock javascript %}        
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

@@ -1,0 +1,222 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                      
+                                            <li class="breadcrumb-item active">Community Business</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Community Business</h4>
+                                </div>
+                            </div>
+                        </div>      
+                        <!-- end page title -->
+
+
+
+  <!-- end row -->
+
+
+
+
+
+
+                          <div class="row infinite-container">
+						  
+                           
+							{% if allbusinesses %}
+							{%for business in allbusinesses%}
+							<div class="infinite-item col-lg-3 col-sm-4">
+                                <div class="card">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-4 col-sm-12 col-md-12">
+                                            <img src={%if business.cover_image%}"{{business.cover_image.url}}"{%else%}"{% static 'account/images/open-business-sign.jpg' %}"{%endif%} class="card-img" alt="...">
+                                        </div>
+                                        <div class="col-8 col-sm-12 col-md-12 mt-0">
+                                            <div class="card-body text-center">
+                                                <h5 style ="
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;"
+ class="card-text" class="card-title">{{business.business_name}}</h5>
+ {%if business.about_business%}
+                                                <p style ="
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;"
+ class="card-text">{{business.about_business}}</p>{%endif%}
+                                              
+<button onclick="Business({{business.pk}})" type="button" class="btn btn-warning p-0"><b class="text-white">More About Us</b></button>
+						
+						
+
+											  
+                                            </div> <!-- end card-body-->
+                                        </div> <!-- end col -->
+                                    </div> <!-- end row-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col-->
+							{%endfor%}
+							{% else %}
+							<div class="card">
+                                    <div class="row g-0 align-items-center">
+                                        <h3 class="mt-2 text-center text-danger">Ooh No Business  Found</h3>
+											<p>Try Searching with Business"s Name or any other Business details </p>
+										
+                                    </div> <!-- end row-->
+                                </div> <!-- end card-->
+							
+							
+							
+							
+							
+							
+							{%endif%}
+							
+							{% if allbusinesses.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  
+										text-success" role="status"  href = "?{% relative_url page=allbusinesses.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+                        </div>
+                        <!-- end row -->
+   
+
+
+
+
+                       
+                        
+                        
+                    </div> <!-- container -->
+{% endblock%} 
+
+               
+{% block javascript %}
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Business ...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'businessessess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+let join_assoc = (id) => {
+
+	assoc = id
+	
+	fetch("{% url 'joinassociation' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+	
+		for(message of messages){
+			if (message.message == 'success'){
+				
+				let joined = "joined".concat(id)
+				let joined_button = document.getElementById(joined);
+				let join = "group".concat(id)
+				let join_button = document.getElementById(join);
+				
+				
+				joined_button.classList.remove('d-none');
+				
+				join_button.classList.add('d-none');
+			}else{
+			alert(message.message)
+			
+			}
+		}
+	});
+}
+
+
+function Business(id){
+	message = id
+	
+	
+	fetch("{% url 'cbusinesssess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'cbusiness' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+
+</script>
+{% endblock javascript %}   
+
+                
+				

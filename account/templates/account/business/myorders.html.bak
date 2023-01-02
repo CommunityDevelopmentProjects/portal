@@ -1,0 +1,347 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% load humanize %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                     <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            <li class="breadcrumb-item active">My Recent Orders</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">My Recent Orders</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+											{% if orders%}
+											<table id="scroll-horizontal-datatable" class="table w-100 nowrap">
+    <thead>
+            <tr>
+                                                                <th >Product</th>
+                                                                <th >Price ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+                                                                <th>Quantity</th>
+                                                                <th >Total Cost ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+																<th>Buyer</th>
+																<th >Amount Paid ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+																<th>Balance ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+																<th>Payement</th>
+																<th>Transaction Id</th>
+                                                                <th > Action</th>
+                                                            </tr>
+    </thead>
+    <tbody>
+       {%for order in orders%}
+                                                            <tr>
+                                                                <td>
+                                                                    <img onclick="Product({{cart.order_product.pk}})" style="cursor:pointer;"src={% if order.order_product.image1%} "{{order.order_product.image1.url}}"
+											{%else%}"{% static 'account/images/product.jpg' %}"
+											{%endif%} alt="contact-img" title="contact-img" class="rounded me-3" height="64">
+                                                                    <p class="m-0 d-inline-block align-middle font-16">
+                                                                        <a href="apps-ecommerce-products-details.html" class="text-body">{{order.order_product.product_brand_name}}</a>
+                                                                        <br>
+																		<!--
+                                                                        <small class="me-2"><b>Size:</b> Large </small>
+                                                                        <small><b>Color:</b> Light Green
+                                                                        </small>
+																		-->
+                                                                    </p>
+                                                                </td>
+                                                                <td >
+                                                                    {% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%} {{order.price|intcomma}}
+                                                                </td>
+                                                                <td>
+                                                                    {{order.quantity}}
+                                                                </td>
+                                                                <td >
+                                                                    {% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%}{{order.total_price|intcomma}}
+                                                                </td>
+																<td>
+																{{order.order_product.business_p.business_name}}
+																</td>
+																	<td >
+																{{order.amount_paid|intcomma}}
+																</td>
+																<td >
+																{{order.balance|intcomma}}
+																</td>
+																<td>
+																{{order.order_payement_mode}}
+																</td>
+																<td>
+																{{order.order_transaction_id}}
+																</td>
+                                                                <td>
+																{%if order.seller_status == False%}
+                                                                    <a style="cursor:pointer;"onclick="CancelOrder({{order.pk}})" > <i class="mdi mdi-delete text-danger"></i> Cancel Order</a>
+                                                                {%elif order.buyer_status == False%}
+		
+																	<button type="button" onchange="CustomerConfirm({{order.pk}})" class="btn btn-warning mb-2 p-1">Please Confirm Details</button>	
+																
+																{%elif order.recieved_status == False%}
+																	
+																	<button type="button" onchange="CustomerRecievedConfirm({{order.pk}})" class="btn btn-warning mb-2 p-1">Please Confirm Recieved</button>	
+																	
+																{%else%}
+																<h5 class="text-success"><b>Settled</b></h5>
+																{%endif%}
+																</td>
+                                                            </tr>
+                                                            
+															{%endfor%}
+    </tbody>
+</table>
+
+                            
+											
+											
+											
+											
+                                               
+
+                                                <!-- Add note input-->
+                                               
+{%else%}
+<div class="card">
+         <h3 class="text-center text-danger">Your Order's Record Is Empty </h3> 
+		 <h5 class="text-center text-warning">Please Buy something in the market</h5>
+</div>
+{%endif%}
+                                                <!-- action buttons-->
+                                                <div class="row mt-4">
+                                                    <div class="col-sm-6">
+                                                        <a href="{% url 'market' %}" class="btn text-muted m-2 d-sm-inline-block btn-link fw-semibold">
+                                                            <i class="mdi mdi-arrow-left"></i> Continue Shopping </a>
+                                                    </div> <!-- end col -->
+
+                                                </div> <!-- end row-->
+                                            </div>
+                                            <!-- end col -->
+
+                                           
+<!-- end table-responsive 
+                                                <div class="alert alert-warning mt-3" role="alert">
+                                                    Use coupon code <strong>HYPBM</strong> and get 10% discount !
+                                                </div>
+
+                                                <div class="input-group mt-3">
+                                                    <input type="text" class="form-control form-control-light" placeholder="Coupon code" aria-label="Recipient's username">
+                                                    <button class="input-group-text btn-light" type="button">Apply</button>
+                                                </div>
+-->
+                                            </div> <!-- end col -->
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+<script src="{% static 'account/js/vendor/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'account/js/vendor/dataTables.bootstrap5.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.responsive.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/responsive.bootstrap5.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.checkboxes.min.js'%}"></script>
+
+		
+<script src ="{% static 'account/js/vendor/dataTables.buttons.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.bootstrap5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.html5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.flash.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.print.min.js' %}"></script>
+<script src ="{% static 'account/js/pages/demo.datatable-init.js' %}"></script>
+
+
+
+
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+function CancelOrder(id){
+	message = id
+	
+	
+	fetch("{% url 'removefromcart' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+
+function CustomerConfirm(id){
+	
+	message = id
+	
+	
+	fetch("{% url 'confirmmyorders' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+		
+}
+
+
+function CustomerRecievedConfirm(id){
+	
+	message = id
+	
+	
+	fetch("{% url 'confirmmyordersrecieved' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+	
+		
+}
+
+
+
+
+function Product(id){
+	message = id
+	
+	
+	fetch("{% url 'shopsess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

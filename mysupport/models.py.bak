@@ -1,0 +1,69 @@
+from django.db import models
+
+from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _lazy
+from phonenumber_field.modelfields import PhoneNumberField
+from imagekit.models import ProcessedImageField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+from django.contrib.auth import get_user_model
+from django.core.validators import FileExtensionValidator
+from account.models import Profile
+from community.models import association
+total_status_choices= [('Open','Open'),('Closed','Closed')] 
+account_status_choices = [('Valid','Valid'),('Invalid','Invalid')] 
+mode_choices = [('Not Paid','Not Paid'),('Cash','Cash'),('Mobile Money','Mobile Money'),('Bank','Bank'),('E-Transfer','E-Transfer')]
+ 
+    
+    
+
+class Support_Accounts(models.Model):
+    support_created_by = models.ForeignKey(Profile,on_delete = models.CASCADE, related_name = 'support_created_by')  
+    support_assoc_by = models.ForeignKey(association,on_delete = models.CASCADE, related_name = 'support_assoc_by')  
+    image1 = ProcessedImageField(upload_to='media',blank=True, null=True,
+                                           processors=[ResizeToFill(1000, 1000)],
+                                           format='JPEG',
+                                           options={'quality': 100})
+    image2 = ProcessedImageField(upload_to='media',blank=True, null=True,
+                                           processors=[ResizeToFill(1000, 1000)],
+                                           format='JPEG',
+                                           options={'quality': 100})
+    image3 = ProcessedImageField(upload_to='media',blank=True, null=True,
+                                           processors=[ResizeToFill(1000, 1000)],
+                                           format='JPEG',
+                                           options={'quality': 100})
+    
+    account_name = models.CharField(max_length=255)
+    call_to_action = models.CharField(max_length=255)
+    button_text = models.CharField(max_length=255)
+    needed_amount = models.IntegerField(default = 0)
+    account_status = models.CharField(max_length=255,default = 'Open',choices =total_status_choices)
+    display_total_status = models.CharField(max_length=255,default = 'Open',choices =total_status_choices)
+    description = models.TextField(blank=True, null=True)       
+    
+    
+    date_made = models.DateTimeField(auto_now_add = True) 
+    
+          
+    def __str__(self):
+        return self.account_name
+
+class Support_Accounts_transactions(models.Model):
+    support_by = models.ForeignKey(Profile,on_delete = models.CASCADE, related_name = 'support_by')  
+    account_supported = models.ForeignKey(Support_Accounts,on_delete = models.CASCADE, related_name = 'account_supported')  
+   
+    support_amount = models.DecimalField(default=0,decimal_places = 1,max_digits=25)
+    support_paid = models.DecimalField(default=0,decimal_places = 1,max_digits=25)
+    account_balance = models.DecimalField(default=0,decimal_places = 1,max_digits=25)
+    transaction_id = models.CharField(max_length=255,default = 'None')
+    payement_mode = models.CharField(max_length=255,default = 'Not Paid',choices = mode_choices)
+    tressurer_confirm = models.CharField(max_length=255,default = 'Invalid',choices =account_status_choices)
+    supporter_confirm = models.CharField(max_length=255,default = 'Invalid',choices =account_status_choices)
+    
+    
+    
+    date_made = models.DateTimeField(auto_now_add = True) 
+    
+          
+    def __str__(self):
+        return self.payement_mode

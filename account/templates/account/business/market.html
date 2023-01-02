@@ -1,0 +1,298 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load humanize %}
+{% load my_tags %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                          
+                                            <li class="breadcrumb-item active">Community Business Center</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Community Business Center</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                       
+                        <!-- end row -->
+
+
+                        <div class="row g-0">
+                            <div class="col-xl-12">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+                                
+
+
+       
+								<div class="card">
+                                    <div class="card-body">
+									
+                                                               <div class="card">
+							  <h4 class="header-title m-2 text-center text-warning">Market</h4>
+							  </div>
+							  <style>
+										#single-product{
+											transition: transform .4s;
+										}
+										#single-product:hover{
+											transform: scale(1.05);
+										}
+									</style>
+									<div class="row g-2 infinite-container"  data-masonry='{"percentPosition": true }' >
+									
+									{% if allproducts %}
+									
+									{% for product in allproducts %}
+									<div id="single-product"class="infinite-item col-6 col-sm-4 col-md-3">
+										<div class="card rounded-top">
+											
+											<img onclick="Product({{product.pk}})" style="cursor:pointer;"src={% if product.image1%} "{{product.image1.url}}"
+											{%else%}"{% static 'account/images/product.jpg' %}"
+											{%endif%}
+											alt="image" class="img-fluid  mx-auto d-block w-100" />
+											<p class="px-1  mb-0"style=" text-overflow:ellipsis; font-size:12px;
+  overflow:hidden;
+  padding-bottom:0;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow-wrap: break-word;
+  " ><b>{{product.product_brand_name}}</b> (<span  >{{product.product_generic_name}}</span>)</p>
+											
+				<h5 class="px-1 m-0">{% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%}{{product.product_price|intcomma}}</h5>
+				{%if product.product_old_price%}
+				<del class="px-1 text-danger">{% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%}{{product.product_old_price|intcomma}}</del>
+				{%endif%}							
+																	   {%if incart%}
+						
+						{% for cart in incart%}
+						
+						{% if cart.order_product.id == product.id%}
+					<button  type="button" class="btn btn-success btn-rounded text-white mt-2 p-0"><b><i class="mdi mdi-cart me-1"></i>Added to Cart</b></button>
+										
+							<style>			  
+						#addtocart-btn{{product.id}}{
+						display:none;
+						}
+						</style>
+						{%else%}
+						
+						{%endif%}
+						
+						{% endfor %}
+						
+						{% endif %}				
+
+										<button id="addtocart-btn{{product.pk}}" onclick="AddtoCart({{product.pk}})"type="button" class="btn btn-warning p-0 btn-rounded text-white mt-2"><b><i class="mdi mdi-cart me-1"></i>Add to Cart</b></button>
+										
+										<button  id="incart{{product.pk}}" type="button" class="d-none btn btn-success btn-rounded p-0 text-white mt-2"><b><i class="mdi mdi-cart me-1"></i>Added to Cart</b></button>
+										
+										</div>
+										
+										</div>
+										{% endfor %}
+										{%else%}
+								<div class="card rounded-top">
+											<h3 class="text-center text-danger">Ooh No Products Found</h3>
+											<p class="text-center text-danger">Try Searching with Product"s Name or Description or other details </p>
+										
+										</div>
+								{% endif %}
+								
+								
+								
+							
+									
+										
+									
+										
+										
+										</div>
+										
+											{% if allproducts.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=allproducts.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+
+function AddtoCart(id){
+	let addtocart_btnid = "addtocart-btn".concat(id)
+	let addtocart_btn = document.getElementById(addtocart_btnid);
+	let cart_count = document.getElementById("cart-count")
+	message = id
+	fetch("{% url 'addcart' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				count = parseInt(cart_count.innerHTML)
+				count +=1
+				cart_count.innerHTML =count
+				
+				let added = "incart".concat(id)
+				let added_btn = document.getElementById(added);
+				added_btn.classList.remove('d-none');
+				
+				addtocart_btn.classList.add('d-none');
+				
+			}
+		}
+	});
+}
+
+
+function Product(id){
+	message = id
+	
+	
+	fetch("{% url 'shopsess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+function RemoveItem(id){
+	message = id
+	
+	
+	fetch("{% url 'removefromcart' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

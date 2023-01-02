@@ -1,0 +1,144 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+ <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+<div class="card">
+                            <!-- Logo-->
+                           
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							
+							{% if calendar %}
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deletemycalendar' %}" novalidate>
+								{% csrf_token %}
+						<input type="hidden" name = "delete" value ="{{calendar.pk}}" >
+									<p>Are You Sure you want to delete <span class = "text-danger">{{calendar.event}}</span> from Your Calendar?</p>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" type="submit"> Confirm </button>
+                                    </div>
+
+                                </form>
+								{% endif %}
+							
+							
+                                {% if timetable %}
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deletetimetable' %}" novalidate>
+								{% csrf_token %}
+						<input type="hidden" name = "delete" value ="{{timetable.pk}}" >
+									<p>Are You Sure you want to delete <span class = "text-danger">{{timetable.event}}</span> from Your Timetable?</p>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" type="submit"> Confirm </button>
+                                    </div>
+
+                                </form>
+								{% endif %}
+								
+								{% if program %}
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deleteprogram' %}" novalidate>
+								{% csrf_token %}
+						<input type="hidden" name = "delete" value ="{{program.pk}}" >
+									<p>Are You Sure you want to delete <span class = "text-danger">{{program.event}}</span> from Your Timetable?</p>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" type="submit"> Confirm </button>
+                                    </div>
+
+                                </form>
+								{% endif %}
+								
+									{% if ourcalendar %}
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deleteourcalendar' %}" novalidate>
+								{% csrf_token %}
+						<input type="hidden" name = "delete" value ="{{ourcalendar.pk}}" >
+									<p>Are You Sure you want to delete <span class = "text-danger">{{ourcalendar.event}}</span> from Your Calendar?</p>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" type="submit"> Confirm </button>
+                                    </div>
+
+                                </form>
+								{% endif %}
+								
+								
+								
+								
+                                {% if project %}
+
+                                <form  method = "POST" enctype ="multipart/form-data" action="{% url 'deleteproject' %}" novalidate>
+								{% csrf_token %}
+						<input type="hidden" name = "delete" value ="{{project.pk}}" >
+									<p>Are You Sure you want to delete <span class = "text-danger">{{project.project_name}}</span> from projects?</p>
+                                    <div class="mb-1 mt-2 text-center">
+                                        <button class="btn btn-info" type="submit"> Confirm </button>
+                                    </div>
+
+                                </form>
+								{% endif %}
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+
+                            <div class="card-body p-4">
+                                
+                                <div class="text-center w-75 m-auto">
+                                    <h4 class="text-dark-50 text-center mt-0 fw-bold">{% if editproject %}Edit Project{% endif%}</h4>
+                                    
+                                </div>
+
+                                <form  method = "POST" enctype ="multipart/form-data" action ="" novalidate>
+								{% csrf_token %}
+{% include "account/form.html" %}
+                                 
+								 
+                                    <div class="row">
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Delete 
+</button>
+                                    </div>
+									</div>
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Save</button>
+                                    </div>
+									</div>
+					</div>
+                                </form>
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+</div>
+</div>
+</div>
+
+{% endblock content%}

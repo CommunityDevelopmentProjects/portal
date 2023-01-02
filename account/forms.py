@@ -1,0 +1,110 @@
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from phonenumber_field.formfields import PhoneNumberField
+from django.urls import reverse_lazy
+from django.contrib.auth import login,authenticate,logout
+from .models import Profile,Projects
+
+User = get_user_model()
+
+
+class LoginForm(forms.Form):
+    phone_number = PhoneNumberField()
+    password = forms.CharField(widget=forms.PasswordInput)
+   
+        
+    def clean(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=phone_number,password=password)
+        if not user or not user.is_active:
+            raise forms.ValidationError('Sorry, that login was invalid. Please try again ')
+        return self.cleaned_data    
+        
+class RegisterForm(forms.ModelForm):
+    password = forms.CharField(widget= forms.PasswordInput)
+    password_2 = forms.CharField(label = 'Confirm Password',widget= forms.PasswordInput)
+    
+    class Meta:
+        model = User
+        fields = ['phone_number','user_name']
+        
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        qs = User.objects.filter(phone_number=phone_number)
+        if qs.exists():
+            raise forms.ValidationError('Phone number already exist')
+        return phone_number
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_2 = cleaned_data.get('password_2')
+        if password is not None and password != password_2:
+            self.add_error('password_2','Your passwords must match')
+        return cleaned_data
+
+    def save(self,commit = True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user  
+        
+class EdituserForm(forms.ModelForm):
+    profile_image = forms.ImageField(help_text=('The current image will still exists if you do not choose any'),error_messages = {'invalid':'Images files only'},label= ('Select Profile Picture'),required =  False,widget = forms.FileInput)
+    class Meta:
+        model = Profile
+        fields = ['profile_image','full_name','address','business','best_skill','mobile','phone',
+        'languages','employment','status','email','about_me',
+        'first_position','first_role','first_company','first_period','first_role_description','second_position',
+        'second_role','second_company','second_period','second_role_description',
+        
+        'third_position','third_role','third_company','third_period','third_role_description','fourth_position',
+        'fourth_role','fourth_company','fourth_period','fourth_role_description','fifth_position',
+        'fifth_role','fifth_company','fifth_period','fifth_role_description','website','facebook','instagram',
+        'twitter','github','tiktok'
+        ]
+        
+class UserAdminCreationForm(forms.ModelForm):
+    password = forms.CharField(widget = forms.PasswordInput)
+    password_2 = forms.CharField(label='Confirm Password',widget = forms.PasswordInput)
+    class Meta:
+        model = User
+        fields = ['phone_number','user_name']
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password_2 = cleaned_data.get('password_2')
+        if password is not None and password !=password_2:
+            self.add_error('password_2','Your passwords must mutch')
+        return cleaned_data
+
+
+    def save(self,commit = True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user   
+        
+class UserAdminChangeForm(forms.ModelForm):
+    password = ReadOnlyPasswordHashField()
+    
+    class Meta:
+        model = User
+        fields = ['phone_number','user_name','password','is_active','admin']
+
+    def clean_password(self):
+        return self.initial['password']
+
+
+class ProjectForm(forms.ModelForm):
+    project_image = forms.ImageField(help_text=('The current image will still exists if you do not choose any'),error_messages = {'invalid':'Images files only'},label= ('Select Profile Picture'),required =  False,widget = forms.FileInput)
+    class Meta:
+        model = Projects
+        fields = ['project_image','project_name','clients','start_date','due_date','status'
+        
+        ]
+        

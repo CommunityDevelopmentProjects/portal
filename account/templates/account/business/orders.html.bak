@@ -1,0 +1,501 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% load humanize %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop2Label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirm Payements For the Order</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            <div class="modal-body">
+                <div class="card">
+                            <!-- Logo-->
+                            
+
+                            <div class="card-body ">
+							 <form method = "POST" action="{% url 'confirmorders'  %}" enctype ="multipart/form-data" class="comment-area-box" novalidate>
+													{% csrf_token %}
+													{% for hidden_field in form2.hidden_fields %}
+													  {{ hidden_field }}
+													{% endfor %}
+
+
+						
+
+
+
+													{% if form2.non_field_errors %}
+													  <div class="alert alert-danger" role="alert">
+														{% for error in form2.non_field_errors %}
+														  {{ error }}
+														{% endfor %}
+													  </div>
+													{% endif %}
+					                        
+ <div class="row">
+                                                        <div class="col-md-12">
+														
+		<div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form2.visible_fields %}
+
+{% if field.name == "amount_paid"%}
+  <div class="form-group">
+    <label>Amount Paid</label>
+	
+    {% if form2.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>												
+														
+														
+                                                            <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form2.visible_fields %}
+
+{% if field.name == "order_payement_mode"%}
+  <div class="form-group">
+    <label>Payement Mode Used</label>
+	
+    {% if form2.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>
+															
+															
+															
+															
+ <div class="mb-3">
+                                                                
+
+
+
+
+{% for field in form2.visible_fields %}
+
+{% if field.name == "order_transaction_id"%}
+  <div class="form-group">
+    <label>Transaction ID</label>
+	
+    {% if form2.is_bound %}
+	
+      {% if field.errors %}
+	  
+        {% render_field field class="form-control is-invalid" %}
+		
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+		  
+        {% endfor %}
+      {% else %}
+	  
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+	  
+    {% else %}
+	
+      {% render_field field class="form-control" %}
+	  
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+ {% endif%}
+{% endfor %}
+                                                            </div>															
+                                                        </div>
+														
+														</div>
+														<div class="mb-0 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Confirm Order</button>
+                                    </div>
+														</form>
+														
+							
+							
+							
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+                     <!-- Start Content-->
+                    <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                           
+                                            <li class="breadcrumb-item active">My Business Orders</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">My Business Orders</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+											{% if orders%}
+											<table id="scroll-horizontal-datatable" class="table w-100 nowrap">
+    <thead>
+        <tr>
+                                                                <th >Product</th>
+                                                                <th >Price ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+                                                                <th>Quantity</th>
+                                                                <th >Total Cost ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+																<th>Buyer</th>
+																<th >Amount Paid ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+																<th>Balance ({% if active_group.myassociation.currency %} {{active_group.myassociation.currency}} {%endif%})</th>
+																<th>Payement</th>
+																<th>Transaction Id</th>
+                                                                <th > Action</th>
+                                                            </tr>
+    </thead>
+    <tbody>
+       {%for order in orders%}
+                                                            <tr>
+                                                                <td>
+                                                                    <img onclick="Product({{order.order_product.pk}})" style="cursor:pointer;"src={% if order.order_product.image1%} "{{order.order_product.image1.url}}"
+											{%else%}"{% static 'account/images/product.jpg' %}"
+											{%endif%} alt="contact-img" title="contact-img" class="rounded me-3" height="64">
+                                                                    <p class="m-0 d-inline-block align-middle font-16">
+                                                                        <a href="apps-ecommerce-products-details.html" class="text-body">{{order.order_product.product_brand_name}}</a>
+                                                                        <br>
+																		<!--
+                                                                        <small class="me-2"><b>Size:</b> Large </small>
+                                                                        <small><b>Color:</b> Light Green
+                                                                        </small>
+																		-->
+                                                                    </p>
+                                                                </td>
+                                                                <td >
+                                                                     {{order.price|intcomma}}
+                                                                </td>
+                                                                <td>
+                                                                    {{order.quantity}}
+                                                                </td>
+                                                                <td >
+                                                                    {{order.total_price|intcomma}}
+                                                                </td>
+																<td>
+																{{order.order_by.user_p.phone_number}}({{order.order_by.user_p.user_name}})
+																</td>
+																<td >
+																{{order.amount_paid|intcomma}}
+																</td>
+																<td>
+																{{order.order_payement_mode}}
+																</td>
+																<td>
+																{{order.order_transaction_id}}
+																</td>
+                                                                <td >
+																{%if order.seller_status == False%}
+                                                                   
+																			
+																			<button type="button" onclick="Confirm({{order.pk}})" data-bs-toggle="modal" data-bs-target="#staticBackdrop2"class="btn btn-primary mb-2 p-0">Please Confirm </button>
+																	
+                                                                {%elif order.recieved_status == False%}
+																	
+																			
+																			Processing
+																{%else%}			
+																		<button type="button" onclick="Confirm2({{order.pk}})" class="btn btn-primary mb-2 p-0">Edit  Order</button>
+																{%endif%}
+																</td>
+                                                            </tr>
+                                                            
+															{%endfor%}
+    </tbody>
+</table>
+											
+											
+
+                                                <!-- Add note input-->
+                                                
+{%else%}
+<div class="card">
+         <h3 class="text-center text-danger">Your Business Order's Record Is Empty </h3> 
+		 <h5 class="text-center text-warning"></h5>
+</div>
+{%endif%}
+                                                <!-- action buttons-->
+                                              
+                                            </div>
+                                            <!-- end col -->
+
+                                           
+<!-- end table-responsive 
+                                                <div class="alert alert-warning mt-3" role="alert">
+                                                    Use coupon code <strong>HYPBM</strong> and get 10% discount !
+                                                </div>
+
+                                                <div class="input-group mt-3">
+                                                    <input type="text" class="form-control form-control-light" placeholder="Coupon code" aria-label="Recipient's username">
+                                                    <button class="input-group-text btn-light" type="button">Apply</button>
+                                                </div>
+-->
+                                            </div> <!-- end col -->
+
+                                        </div> <!-- end row -->
+                                    </div> <!-- end card-body-->
+                                </div> <!-- end card-->
+                            </div> <!-- end col -->
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+<script src="{% static 'account/js/vendor/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'account/js/vendor/dataTables.bootstrap5.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.responsive.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/responsive.bootstrap5.min.js'%}"></script>
+<script src="{% static 'account/js/vendor/dataTables.checkboxes.min.js'%}"></script>
+
+		
+<script src ="{% static 'account/js/vendor/dataTables.buttons.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.bootstrap5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.html5.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.flash.min.js' %}"></script>
+<script src ="{% static 'account/js/vendor/buttons.print.min.js' %}"></script>
+<script src ="{% static 'account/js/pages/demo.datatable-init.js' %}"></script>
+
+
+
+
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Products...........";
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchproductmarket' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+function Confirm2(id){
+
+	message = id
+	
+	
+	fetch("{% url 'confirmorderssess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'editorder' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+function Confirm(id){
+
+	message = id
+	
+	
+	fetch("{% url 'confirmorderssess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				
+			}
+		}
+	});
+	
+	
+	
+}
+
+
+
+
+
+
+
+function Product(id){
+	message = id
+	
+	
+	fetch("{% url 'shopsess' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'shop' %}";
+			}
+		}
+	});
+	
+	
+	
+}
+</script>
+
+
+        <!-- third party js ends -->
+
+  
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

@@ -1,0 +1,42 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content%}
+ <div class="container-fluid">
+
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+<div class="card">
+                            <!-- Logo-->
+
+
+                            <div class="card-body p-4">
+                                
+                                <div class="text-center w-75 m-auto">
+                                    <h4 class="text-dark-50 text-center mt-0 fw-bold">{% if editproject %}Edit Project{% endif%}</h4>
+                                    
+                                </div>
+
+                                <form  method = "POST" enctype ="multipart/form-data" action ="" novalidate>
+								{% csrf_token %}
+{% include "account/form.html" %}
+                                 
+								 
+                                    <div class="row">
+									 
+									 <div class="col-6">
+                                    <div class="mb-3 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Save</button>
+                                    </div>
+									</div>
+					</div>
+                                </form>
+                            </div> <!-- end card-body -->
+                        </div>
+                        <!-- end card -->
+</div>
+</div>
+</div>
+
+{% endblock content%}

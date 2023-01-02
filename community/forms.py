@@ -1,0 +1,41 @@
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from phonenumber_field.formfields import PhoneNumberField
+from django.urls import reverse_lazy
+from django.contrib.auth import login,authenticate,logout
+from .models import association,association_leader,association_member
+
+User = get_user_model()
+
+
+
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = association
+        fields = ['profile_image','name','slogan','association_type','privacy','address','financial_year','currency','about_us']
+        
+
+class CompleteGroupForm(forms.ModelForm):
+    class Meta:
+        model = association
+        fields = ['profile_image','name','association_type','privacy','address','financial_year','currency','about_us',
+        'mobile','phone','email','motto','slogan','mission','facebook','youtube','twitter','languages',
+        'vission','first_goal','second_goal','third_goal','head_office','what_we_do'
+        ]
+
+
+class GroupLeaderForm(forms.ModelForm):
+    class Meta:
+        model = association_leader
+        fields = ['position','other_position','leader_status']
+
+
+class AddMemberGroupForm(forms.ModelForm):
+    new_member = PhoneNumberField()
+    class Meta:
+        model = association_member
+        fields = ['new_member']
+        
+        
+   

@@ -1,0 +1,301 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                          
+                                            <li class="breadcrumb-item active">Community Members</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Community Members</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- Profile -->
+                                <div class="card bg-primary">
+                                    <div class="card-body profile-user-box">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <div class="avatar-lg">
+                                                            <img src={% if active_group.myassociation.profile_image %} "{{active_group.myassociation.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%}  alt="" class="rounded-circle img-thumbnail">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div>
+                                                           <h4 class="mt-1 mb-1 text-white">{% if active_group%} {{active_group.myassociation.name}}{% endif %}</h4>
+                                                            <p class="font-13 text-white-50">{% if active_group%}
+															{%if active_group.myassociation.motto%}
+															{{active_group.myassociation.motto}}
+															{%else%}
+															Strong Together
+															{%endif%}
+															{% endif %}</p>
+                                                            <ul class="mb-0 list-inline text-light">
+															<!--
+                                                                <li class="list-inline-item me-3">
+                                                                    <h5 class="mb-1">$ 25,184</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Total Revenue</p>
+                                                                </li>
+																-->
+                                                                <li class="list-inline-item">
+                                                                    <h5 class="mb-1">{{members_no}}</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Members</p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col-->
+													<!-- Modal -->
+													{% if 'leaders_role' in request.session %}	
+											{% if request.session.leaders_role == '1' or request.session.leaders_role == '2'%}
+                                            <div class="col-sm-4">
+                                                <div class="text-center mt-sm-0 mt-3 text-sm-end">
+                 <a href="{% url 'addmember'  %}"><button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		Add Member
+</button></a>
+                                                </div>
+                                            </div> <!-- end col-->
+	{%endif%}
+{%endif%}										
+                                        </div> <!-- end row -->
+
+                                    </div> <!-- end card-body/ profile-user-box-->
+                                </div><!--end profile/ card -->
+                            </div> <!-- end col-->
+                        </div>
+                        <!-- end row -->
+
+
+                        
+                            <div class="col-xl-12">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+                                
+
+
+                              
+								<div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">Our Members</h4>
+									<div class="row infinite-container">
+									
+									{% if allmembers %}
+									
+									{% for member in allmembers %}
+									<div class="infinite-item col-6 col-sm-3 col-md-2">
+										<div class="card rounded-top">
+											
+											<img src={% if member.member.profile_image%} "{{member.member.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%}
+											alt="image" class="img-fluid img-thumbnail mx-auto d-block rounded-circle" width="120"/>
+											<p class="text-center mb-0"><b>Ssempijja John {{member.member.user_p.user_name}}</b></p>
+											{% if member.member.best_skill %}
+											<p class="text-center mb-0"><b>{{member.member.best_skill}}</b></p>
+											{%endif%}
+											{% if 'leaders_role' in request.session %}	
+											{% if request.session.leaders_role == '1' or request.session.leaders_role == '2'%}
+											<button type="button" onclick="send_user({{member.id}})"  class="btn mb-2 btn-outline-danger btn-rounded p-0"><i class="uil-envelope"></i> Remove</button>
+											{%endif%}
+											{%endif%}
+											<button type="button" onclick="member({{member.member.id}})"class="btn btn-outline-info btn-rounded mt-2 p-0"> Contact Me</button>
+										</div>
+										
+										</div>
+										{% endfor %}
+										{%else%}
+								<div class="card rounded-top">
+											<h3 class="text-center text-danger">Ooh No Member is Found</h3>
+											<p>Try Searching with Member"s Name or Professional eg "Carpenter" or any other Member details </p>
+										
+										</div>
+								{% endif %}
+								
+								
+								
+							
+										{% if allmembers.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=allmembers.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+										
+									
+										
+										
+										</div>
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Members...........";
+		
+let topmysearch = document.getElementById("top-search");
+
+topmysearch.placeholder = "Search Members...........";		
+		
+		
+function mySearch(){
+
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchmember' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+function mytopSearch(){
+	alert()
+	let message = topmysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchmember' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+function member(id){
+	message = id
+	fetch("{% url 'member' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href= "{% url 'member' %}";;
+			}
+		}
+	});
+}
+function send_user(id){
+	message = id
+	fetch("{% url 'removemember' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.href = "{% url 'confirm' %}";
+			}
+		}
+	});
+}
+
+
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

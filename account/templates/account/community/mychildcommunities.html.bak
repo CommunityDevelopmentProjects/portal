@@ -1,0 +1,407 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+
+            <!-- ============================================================== -->
+            <!-- Start Page Content here -->
+            <!-- ============================================================== -->
+
+           
+
+                    <!-- Start Content-->
+                    <div class="container-fluid">
+                        
+                        <!-- start page title -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                          
+                                            <li class="breadcrumb-item active">Our {{active_group.myassociation.slogan}} Communities</li>
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title">Our {{active_group.myassociation.slogan}} Communities</h4>
+                                </div>
+                            </div>
+                        </div>     
+                        <!-- end page title --> 
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+				{% if 'leaders_role' in request.session %}	
+					{% if request.session.leaders_role == '1' or request.session.leaders_role == '2'%}
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Create {{active_group.myassociation.slogan}} Child Community</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div> <!-- end modal header -->
+            {%endif%}
+			{%endif%}
+			<div class="modal-body">
+                 <form  method = "POST" enctype ="multipart/form-data" action="{% url 'innercommunities' %}" >
+								{% csrf_token %}
+									{% include "account/form.html" %}
+                                 
+                                   
+
+                                    <div class="mb-1 mt-3 text-center">
+                                        <button class="btn btn-primary" type="submit"> Save {{active_group.myassociation.slogan}} Child Community</button>
+                                    </div>
+
+                                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close Form</button>
+                
+            </div> <!-- end modal footer -->
+        </div> <!-- end modal content-->
+    </div> <!-- end modal dialog-->
+</div> <!-- end modal-->
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <!-- Profile -->
+                                <div class="card bg-primary">
+                                    <div class="card-body profile-user-box">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="row align-items-center">
+                                                    <div class="col-auto">
+                                                        <div class="avatar-lg">
+                                                            <img src={% if active_group.myassociation.profile_image %} "{{active_group.myassociation.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%}  alt="" class="rounded-circle img-thumbnail">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div>
+                                                                                                                        <h4 class="mt-1 mb-1 text-white">{% if active_group%} {{active_group.myassociation.name}}{% endif %}</h4>
+                                                            <p class="font-13 text-white-50">{% if active_group%}
+															{%if active_group.myassociation.motto%}
+															{{active_group.myassociation.motto}}
+															{%else%}
+															Strong Together
+															{%endif%}
+															{% endif %}</p>
+                                                            <ul class="mb-0 list-inline text-light">
+															<!--
+                                                                <li class="list-inline-item me-3">
+                                                                    <h5 class="mb-1">$ 25,184</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Total Revenue</p>
+                                                                </li>
+																-->
+                                                                <li class="list-inline-item">
+                                                                    <h5 class="mb-1">{{members_no}}</h5>
+                                                                    <p class="mb-0 font-13 text-white-50">Members</p>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- end col-->
+													<!-- Modal -->
+													
+                                            <div class="col-sm-4">
+                                                <div class="text-center mt-sm-0 mt-3 text-sm-end">
+                                                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		Add Community
+</button>
+                                                </div>
+                                            </div> <!-- end col-->
+                                        </div> <!-- end row -->
+
+                                    </div> <!-- end card-body/ profile-user-box-->
+                                </div><!--end profile/ card -->
+                            </div> <!-- end col-->
+                        </div>
+                        <!-- end row -->
+
+
+                        
+                            <div class="col-xl-12">
+
+                                <!-- Chart-->
+                                
+                                <!-- End Chart-->
+
+                                
+
+
+                              
+								<div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title mb-3">{{active_group.myassociation.slogan}} Communities</h4>
+									<div class="row infinite-container">
+									{% if allinnercomms %}
+									{% for innercomm in allinnercomms %}
+									<div class="infinite-item col-6 col-sm-4 col-md-3">
+										<div class="card rounded-top">
+											
+											<img src={% if innercomm.profile_image%} "{{innercomm.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%}
+											alt="image" class="img-fluid img-thumbnail mx-auto d-block rounded-circle" width="120"/>
+											<p class="text-center mb-0"><b>{{innercomm.name}}</b></p>
+											{% if 'leaders_role' in request.session %}	
+					{% if request.session.leaders_role == '1' or request.session.leaders_role == '2'%}
+											{% if innercomm.approved == 2%}
+											<div class="row">
+											<div class="col-sm-6 text-center mb-2">
+											<button type="button" onclick="send_assoc({{innercomm.id}})"  class="btn btn-sm btn-outline-danger btn-rounded">Delete</button>
+											</div>
+											<div class="col-sm-6 text-center">
+												<button type="button"onclick="approve_assoc({{innercomm.id}})" class="btn btn-sm btn-outline-info btn-rounded"></i>Approve</button>
+											</div>
+											</div>
+											{%elif innercomm.approved == 3%}
+											<div class="text-center">
+												<button type="button"onclick="approve_assoc({{innercomm.id}})" class="btn btn-sm btn-outline-info btn-rounded"></i>Approve</button>
+											</div>
+											{%else%}
+											<div class=" text-center">
+												<button type="button" onclick="disapprove_assoc({{innercomm.id}})" class="btn btn-sm btn-outline-danger btn-rounded"></i>Disapprove</button>
+											</div>
+											{%endif%}
+											
+										{%endif%}
+										{%endif%}
+											
+											<!-- JOIN CHILD GROUPS -->
+											   {%if myassocs%}
+						
+						{% for myassoc in myassocs%}
+						
+						{% if innercomm.id == myassoc.myassociation.id%}
+					<button type="button"  class="mt-1 btn btn-success btn-sm">Joined</button>
+							<style>			  
+						#group{{innercomm.id}}{
+						display:none;
+						}
+						</style>
+						{%else%}
+						
+						{%endif%}
+						
+						{% endfor %}
+						
+						{% endif %}
+						
+						
+											   <button type="button" id ="group{{innercomm.id}}" onclick="join_assoc({{innercomm.id}})" class="mt-1 btn btn-info btn-sm">Join Us Now</button>
+											  <button type="button" id ="joined{{innercomm.id}}" class="mt-1 btn btn-success btn-sm d-none">Joined</button>
+                                            
+											
+											<!--- JOIN CHILD GROUPS -->
+											
+										</div>
+										
+										</div>
+										{% endfor %}
+										
+										{%else%}
+								<div class="card rounded-top">
+											<h3 class="text-center text-danger">Ooh No Member is Found</h3>
+											<p>Try Searching with Member"s Name or Professional eg "Carpenter" or any other Member details </p>
+										
+										</div>
+										
+								{% endif %}
+										
+										
+									{% if allinnercomms.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=allinnercomms.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+										
+										
+										</div>
+                                    </div> <!-- end col-->
+                                </div> <!-- end row-->
+
+                            </div>
+                            <!-- end col -->
+
+                        </div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+                
+
+{% endblock%} 
+
+               
+
+{% block javascript %}
+<script>
+
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Our Community and Join...........";
+
+let join_assoc = (id) => {
+
+	assoc = id
+	
+	fetch("{% url 'joinassociation' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+	
+		for(message of messages){
+			if (message.message == 'success'){
+				
+				let joined = "joined".concat(id)
+				let joined_button = document.getElementById(joined);
+				let join = "group".concat(id)
+				let join_button = document.getElementById(join);
+				
+				
+				joined_button.classList.remove('d-none');
+				
+				join_button.classList.add('d-none');
+			}else{
+			alert(message.message)
+			
+			}
+		}
+	});
+}
+
+
+
+		
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchinnercommunities' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+
+
+
+
+
+
+let disapprove_assoc = (id) => {
+
+	assoc = id
+
+	fetch("{% url 'disapprovecomm' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if (message.message == 'success'){
+			location.reload();
+			}
+		}
+	});
+}
+
+
+let approve_assoc = (id) => {
+
+	assoc = id
+
+	fetch("{% url 'approvecomm' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if (message.message == 'success'){
+			location.reload();
+			}
+		}
+	});
+}
+
+let send_assoc = (id) => {
+
+	assoc = id
+
+	fetch("{% url 'removecomm' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(assoc)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if (message.message == 'success'){
+			location.reload();
+			}
+		}
+	});
+}
+
+</script>
+{% endblock javascript %}      
+
+            <!-- ============================================================== -->
+            <!-- End Page content -->
+            <!-- ============================================================== -->
+
+
+       
+        <!-- END wrapper -->
+
+

@@ -1,0 +1,1019 @@
+{% extends "account/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% load my_tags %}
+{% block content%}
+  <div class="container-fluid">
+                          <div class="row">
+                            <div class="col-12">
+                                <div class="page-title-box">
+                                    <div class="page-title-right">
+                                        <ol class="breadcrumb m-0">
+                                            
+                                   
+                                        </ol>
+                                    </div>
+                                    <h4 class="page-title"><li class="breadcrumb-item "><a href="{% url 'posts'  %}">Posts</a></li></h4>
+									
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end page title -->
+                        <!-- start page title -->
+                        <div class="row">
+
+
+<!-- start news feeds -->
+<!--NO IMAGE POST -->
+{% if post.images == 0%}
+
+
+                                <div class="card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+												{%endif%}
+                                                <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                           
+										   </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16  text-dark my-3">
+                                            <p>{{post.post}}</p>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="my-1">
+                                            <a href="javascript:like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+											
+											{% if liked %}<i id='post-like{{post.pk}}' class='mdi mdi-heart text-danger'></i> 
+											{%else%}
+											<i id='post-like{{post.pk}}'class='mdi mdi-heart '></i> 
+											{%endif%}
+											<span id='likecount'>{{post.likes_count}}</span>
+											 Likes</a>
+                                            <a class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i>{{post.comment_count}}Comments</a>
+                                            
+                                        </div>
+
+                                        
+										<div  class="comment-area-box border">
+                                                <textarea rows="3" id ="comment-input"class="form-control border-0 resize-none" placeholder="Your comment..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+													<!--
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-at'></i></a>
+														-->
+                                                    </div>
+                                                    <button id ="comment-button" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+										<!--post comment starts here-->
+										
+<div id="comment-container"  class="mt-3 ">
+<div class="infinite-container" id="python-comments infinite-container">
+                  {% if comments%} 
+{% for message in comments%}				  
+<div  class="d-flex infinite-item">
+											<!--post comment owner image and user name-->
+                                                <img class="me-2 rounded" src={% if message.comment_by.profile_image %} "{{message.comment_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                                <div>
+                                                    <h5 class="m-0">{{message.comment_by.user_p.user_name}}</h5>
+													
+                                                    <p class="text-muted mb-0"><small>{{message.date_commented|timesince}}</small></p>
+
+                                                    <p class="my-1">{{message.comment}}</p>
+<!--post comment ends here-->
+                                                    <div>
+													<!--post comment like and share button-->
+                                                        <a href="javascript:like_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0">
+														
+														{% for LikedComment in LikedComments%}
+						
+											{% if message.pk == LikedComment.comment_liked.id%}
+                                                            <i id="comment-like{{message.pk}}" class='uil uil-heart me-1 text-danger'></i>
+															<span id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> Liked
+															<style>
+															.not-liked{{message.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+															<i id="comment-like{{message.pk}}" class='uil uil-heart me-1 not-liked{{message.pk}}'></i>
+															<span class="not-liked{{message.pk}}" id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> 
+															<span class="not-liked{{message.pk}}">Like</span>
+															
+															
+                                                        </a>
+                                                        <a href="javascript:open_reply({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-comments-alt me-1'></i> Reply
+                                                        </a>
+														{% if message.comment_by == active_user%}
+														 <a href="javascript:delete_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-trash-alt me-1'></i> Delete
+                                                        </a>
+														{%endif%}
+														{%if message.reply_count%}
+														
+														<p class="pe-auto" onclick="open_reply({{message.pk}})" id="view{{message.pk}}"><b>view previous {{message.reply_count}} reply</b></p>
+														{%endif%}
+													</div>
+													<div id="reply{{message.pk}}" class="mt-3 d-none">
+													<div class="comment-area-box border">
+                                                <textarea rows="3"  class="form-control border-0 resize-none" placeholder="Your reply..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <!--post comment<a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>-->
+                                                        
+                                                    </div>
+                                                    <button id ="" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+													<!--post comment like and share button ends here-->
+													<!--post comment reply-->
+													<div id="reply-container{{message.pk}}">
+												<!-- end d-flex-->
+													</div>
+													<!--post comment reply ends here-->
+													 </div>
+															<!--reply comment div-->
+                                                    
+                                                </div> <!-- end div -->
+                                         
+
+                                           
+
+                                        </div>
+										{%endfor%}
+										{%endif%}
+				
+										</div>
+										{% if comments.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=comments.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+										</div>
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+								</div>
+
+<!-- NO IMAGE POST ENDS-->								
+	{%endif%}							
+								
+	<!--THREE IMAGES POST -->
+{% if post.images == 3%}							
+								
+								
+								<div class="card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+											{%endif%}	
+<h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                           
+											</div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16  text-dark my-3">
+                                             <p>{{post.post}}</p>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <img src="{{post.post_image1.url}}" alt="post-img" class="rounded me-1 mb-3 mb-sm-0 img-fluid w-100">
+                                                </div>
+                                                <div class="col">
+                                                    <img src="{{post.post_image2.url}}" alt="post-img" class="rounded me-1 img-fluid mb-3 w-100">
+                                                    <img src="{{post.post_image3.url}}" alt="post-img" class="rounded me-1 img-fluid w-100">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                      <div class="my-1">
+                                            <a href="javascript:like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+											
+											{% if liked %}<i id='post-like{{post.pk}}' class='mdi mdi-heart text-danger'></i> 
+											{%else%}
+											<i id='post-like{{post.pk}}'class='mdi mdi-heart '></i> 
+											{%endif%}
+											<span id='likecount'>{{post.likes_count}}</span>
+											 Likes</a>
+                                            <a class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i>{{post.comment_count}}Comments</a>
+                                            
+                                        </div>
+
+                                        
+										<div  class="comment-area-box border">
+                                                <textarea rows="3" id ="comment-input"class="form-control border-0 resize-none" placeholder="Your comment..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+													<!--
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-at'></i></a>
+														-->
+                                                    </div>
+                                                    <button id ="comment-button" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+										<!--post comment starts here-->
+										
+<div id="comment-container"  class="mt-3 ">
+<div class="infinite-container"id="python-comments infinite-container">
+                  {% if comments%} 
+{% for message in comments%}				  
+<div  class="infinite-item d-flex">
+											<!--post comment owner image and user name-->
+                                                <img class="me-2 rounded" src={% if message.comment_by.profile_image %} "{{message.comment_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                                <div>
+                                                    <h5 class="m-0">{{message.comment_by.user_p.user_name}}</h5>
+													
+                                                    <p class="text-muted mb-0"><small>{{message.date_commented|timesince}}</small></p>
+
+                                                    <p class="my-1">{{message.comment}}</p>
+<!--post comment ends here-->
+                                                    <div>
+													<!--post comment like and share button-->
+                                                        <a href="javascript:like_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0">
+														
+														{% for LikedComment in LikedComments%}
+						
+											{% if message.pk == LikedComment.comment_liked.id%}
+                                                            <i id="comment-like{{message.pk}}" class='uil uil-heart me-1 text-danger'></i>
+															<span id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> Liked
+															<style>
+															.not-liked{{message.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+															<i id="comment-like{{message.pk}}" class='uil uil-heart me-1 not-liked{{message.pk}}'></i>
+															<span class="not-liked{{message.pk}}" id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> 
+															<span class="not-liked{{message.pk}}">Like</span>
+															
+															
+                                                        </a>
+                                                        <a href="javascript:open_reply({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-comments-alt me-1'></i> Reply
+                                                        </a>
+														{% if message.comment_by == active_user%}
+														 <a href="javascript:delete_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-trash-alt me-1'></i> Delete
+                                                        </a>
+														{%endif%}
+														{%if message.reply_count%}
+														
+														<p class="pe-auto" onclick="open_reply({{message.pk}})" id="view{{message.pk}}"><b>view previous {{message.reply_count}} reply</b></p>
+														{%endif%}
+													</div>
+													<div id="reply{{message.pk}}" class="mt-3 d-none">
+													<div class="comment-area-box border">
+                                                <textarea rows="3"  class="form-control border-0 resize-none" placeholder="Your reply..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <!--post comment<a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>-->
+                                                        
+                                                    </div>
+                                                    <button id ="" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+													<!--post comment like and share button ends here-->
+													<!--post comment reply-->
+													<div id="reply-container{{message.pk}}">
+												<!-- end d-flex-->
+													</div>
+													<!--post comment reply ends here-->
+													 </div>
+															<!--reply comment div-->
+                                                    
+                                                </div> <!-- end div -->
+                                         
+
+                                           
+
+                                        </div>
+										{%endfor%}
+										{%endif%}
+										</div>
+										{% if comments.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=comments.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}
+										</div>
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+								
+{% endif %}								
+								
+								
+								
+<!--THREE IMAGES POST -->
+{% if post.images == 2%}								
+								
+					<div class="card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+												{%endif%}
+                                                <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                           
+											</div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16 text-dark my-3">
+                                             <p>{{post.post}}</p>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <img src="{{post.post_image1.url}}" alt="post-img" class="rounded me-1 mb-3 mb-sm-0 img-fluid w-100">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <img src="{{post.post_image2.url}}" alt="post-img" class="rounded me-1 img-fluid mb-3 w-100">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="my-1">
+                                            <a href="javascript:like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+											
+											{% if liked %}<i id='post-like{{post.pk}}' class='mdi mdi-heart text-danger'></i> 
+											{%else%}
+											<i id='post-like{{post.pk}}'class='mdi mdi-heart '></i> 
+											{%endif%}
+											<span id='likecount'>{{post.likes_count}}</span>
+											 Likes</a>
+                                            <a class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i>{{post.comment_count}}Comments</a>
+                                            
+                                        </div>
+
+                                        
+										<div  class="comment-area-box border">
+                                                <textarea rows="3" id ="comment-input"class="form-control border-0 resize-none" placeholder="Your comment..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+													<!--
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-at'></i></a>
+														-->
+                                                    </div>
+                                                    <button id ="comment-button" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+										<!--post comment starts here-->
+										
+<div id="comment-container"  class="mt-3 ">
+<div id="python-comments" class="infinite-container">
+                  {% if comments%} 
+{% for message in comments%}				  
+<div  class="infinite-item d-flex">
+											<!--post comment owner image and user name-->
+                                                <img class="me-2 rounded" src={% if message.comment_by.profile_image %} "{{message.comment_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                                <div>
+                                                    <h5 class="m-0">{{message.comment_by.user_p.user_name}}</h5>
+													
+                                                    <p class="text-muted mb-0"><small>{{message.date_commented|timesince}}</small></p>
+
+                                                    <p class="my-1">{{message.comment}}</p>
+<!--post comment ends here-->
+                                                    <div>
+													<!--post comment like and share button-->
+                                                        <a href="javascript:like_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0">
+														
+														{% for LikedComment in LikedComments%}
+						
+											{% if message.pk == LikedComment.comment_liked.id%}
+                                                            <i id="comment-like{{message.pk}}" class='uil uil-heart me-1 text-danger'></i>
+															<span id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> Liked
+															<style>
+															.not-liked{{message.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+															<i id="comment-like{{message.pk}}" class='uil uil-heart me-1 not-liked{{message.pk}}'></i>
+															<span class="not-liked{{message.pk}}" id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> 
+															<span class="not-liked{{message.pk}}">Like</span>
+															
+															
+                                                        </a>
+                                                        <a href="javascript:open_reply({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-comments-alt me-1'></i> Reply
+                                                        </a>
+														{% if message.comment_by == active_user%}
+														 <a href="javascript:delete_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-trash-alt me-1'></i> Delete
+                                                        </a>{%endif%}
+														{%if message.reply_count%}
+														
+														<p class="pe-auto" onclick="open_reply({{message.pk}})" id="view{{message.pk}}"><b>view previous {{message.reply_count}} reply</b></p>
+														{%endif%}
+													</div>
+													<div id="reply{{message.pk}}" class="mt-3 d-none">
+													<div class="comment-area-box border">
+                                                <textarea rows="3"  class="form-control border-0 resize-none" placeholder="Your reply..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <!--post comment<a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>-->
+                                                        
+                                                    </div>
+                                                    <button id ="" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+													<!--post comment like and share button ends here-->
+													<!--post comment reply-->
+													<div id="reply-container{{message.pk}}">
+												<!-- end d-flex-->
+													</div>
+													<!--post comment reply ends here-->
+													 </div>
+															<!--reply comment div-->
+                                                    
+                                                </div> <!-- end div -->
+                                         
+
+                                           
+
+                                        </div>
+										{%endfor%}
+										{%endif%}
+										</div>
+						{% if comments.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=comments.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}				
+										</div>
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->			
+								
+								
+								
+{% endif %}								
+								
+								
+<!--THREE IMAGES POST -->
+{% if post.images == 1%}								
+								
+								
+						<div class="card ">
+                                    <div class="card-body pb-1">
+                                        <div class="d-flex">
+                                            <img class="me-2 rounded" src={% if post.posted_by.profile_image %} "{{post.posted_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                            <div class="w-100">
+											{% if post.posted_by == active_user%}
+                                                <div class="dropdown float-end text-muted">
+                                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="mdi mdi-dots-horizontal"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Edit</a>
+                                                        <!-- item-->
+                                                        <a href="javascript:void(0);" class="dropdown-item">Delete</a>
+                                                    </div>
+                                                </div>
+												{%endif%}
+                                               <h5 class="m-0">{{post.posted_by.user_p.user_name}}</h5>
+                                                <p class="text-muted"><small>about {{post.date_posted|timesince}} <span class="mx-1">⚬</span> <span>{{post.posted_to.slogan}}</span></small></p>
+                                                    
+											</div>
+                                        </div>
+
+                                        <hr class="m-0">
+
+                                        <div class="font-16  text-dark my-3">
+                                           
+                                            {{post.post}}
+                                       
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <img src="{{post.post_image1.url}}" alt="post-img" class="rounded me-1 mb-3 mb-sm-0 img-fluid w-100">
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                        <hr class="m-0">
+ <div class="my-1">
+                                            <a href="javascript:like_post({{post.pk}});" class="btn btn-sm btn-link text-muted ps-0">
+											
+											{% if liked %}<i id='post-like{{post.pk}}' class='mdi mdi-heart text-danger'></i> 
+											{%else%}
+											<i id='post-like{{post.pk}}'class='mdi mdi-heart '></i> 
+											{%endif%}
+											<span id='likecount'>{{post.likes_count}}</span>
+											 Likes</a>
+                                            <a class="btn btn-sm btn-link text-muted"><i class='uil uil-comments-alt'></i>{{post.comment_count}}Comments</a>
+                                            
+                                        </div>
+
+                                        
+										<div  class="comment-area-box border">
+                                                <textarea rows="3" id ="comment-input"class="form-control border-0 resize-none" placeholder="Your comment..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+													<!--
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>
+                                                        <a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-at'></i></a>
+														-->
+                                                    </div>
+                                                    <button id ="comment-button" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+										<!--post comment starts here-->
+										
+<div id="comment-container"  class="mt-3 ">
+<div class="infinite-container" id="python-comments">
+                  {% if comments%} 
+{% for message in comments%}				  
+<div  class="infinite-item d-flex">
+											<!--post comment owner image and user name-->
+                                                <img class="me-2 rounded" src={% if message.comment_by.profile_image %} "{{message.comment_by.profile_image.url}}"
+											{%else%}"{% static 'account/images/profile.png' %}"
+											{%endif%} alt="Generic placeholder image" height="32">
+                                                <div>
+                                                    <h5 class="m-0">{{message.comment_by.user_p.user_name}}</h5>
+													
+                                                    <p class="text-muted mb-0"><small>{{message.date_commented|timesince}}</small></p>
+
+                                                    <p class="my-1">{{message.comment}}</p>
+<!--post comment ends here-->
+                                                    <div>
+													<!--post comment like and share button-->
+                                                        <a href="javascript:like_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0">
+														
+														{% for LikedComment in LikedComments%}
+						
+											{% if message.pk == LikedComment.comment_liked.id%}
+                                                            <i id="comment-like{{message.pk}}" class='uil uil-heart me-1 text-danger'></i>
+															<span id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> Liked
+															<style>
+															.not-liked{{message.pk}}{
+															display:none;
+															}
+															</style>
+															
+												
+												{%endif%}
+															
+															{% endfor %}
+															<i id="comment-like{{message.pk}}" class='uil uil-heart me-1 not-liked{{message.pk}}'></i>
+															<span class="not-liked{{message.pk}}" id="like-count{{message.pk}}" >{{message.comment_likes_count}}</span> 
+															<span class="not-liked{{message.pk}}">Like</span>
+															
+															
+                                                        </a>
+                                                        <a href="javascript:open_reply({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-comments-alt me-1'></i> Reply
+                                                        </a>
+														{% if message.comment_by == active_user%}
+														 <a href="javascript:delete_comment({{message.pk}});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-trash-alt me-1'></i> Delete
+                                                        </a>{%endif%}
+														{%if message.reply_count%}
+														
+														<p class="pe-auto" onclick="open_reply({{message.pk}})" id="view{{message.pk}}"><b>view previous {{message.reply_count}} reply</b></p>
+														{%endif%}
+													</div>
+													<div id="reply{{message.pk}}" class="mt-3 d-none">
+													<div class="comment-area-box border">
+                                                <textarea rows="3"  class="form-control border-0 resize-none" placeholder="Your reply..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <!--post comment<a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>-->
+                                                        
+                                                    </div>
+                                                    <button id ="" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+													<!--post comment like and share button ends here-->
+													<!--post comment reply-->
+													<div id="reply-container{{message.pk}}">
+												<!-- end d-flex-->
+													</div>
+													<!--post comment reply ends here-->
+													 </div>
+															<!--reply comment div-->
+                                                    
+                                                </div> <!-- end div -->
+                                         
+
+                                           
+
+                                        </div>
+										{%endfor%}
+										{%endif%}
+										
+										</div>
+				{% if comments.has_next%}
+										<div class="d-flex justify-content-center">
+										<a class="infinite-more-link spinner-border  text-success" role="status"  href = "?{% relative_url page=comments.next_page_number %}"></a>
+										</div>
+			
+				{%endif%}	
+										
+										
+										</div>
+                                       
+                                        <div class="mt-3">
+                                           
+                                            <hr>
+
+                                            <!-- end d-flex -->
+
+                                        </div>
+                                    </div> <!-- end card-body -->
+                                </div> <!-- end card -->
+
+
+{%endif%}
+
+						
+								
+								
+</div>
+                        <!-- end row -->
+                        
+                    </div> <!-- container -->
+
+                 <!-- content -->
+
+{% endblock%} 
+               
+{% block javascript %}
+<script>
+var infinite = new Waypoint.Infinite({
+			element:$(".infinite-container")[0]
+		
+		
+		});
+		
+		
+let mysearch = document.getElementById("mysearch-input");
+
+mysearch.placeholder = "Search Comment...........";
+function mySearch(){
+	let message = mysearch.value
+	
+	if (message === ''){
+		return;
+	}
+	mysearch.value = ''
+	fetch("{% url 'searchcomment' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+		for(message of messages){
+			if(message.message=='success'){
+				window.location.reload();
+			}
+		}
+	});
+}
+	
+
+
+//construct commnet section from javascript
+let message_container = document.querySelector('#comment-container');
+
+function construt_message(message){
+	
+	let div = document.createElement('div');
+	
+		
+	
+		
+		div.innerHTML = `<div  class="d-flex">
+											<!--post comment owner image and user name-->
+                                                <img class="me-2 rounded" src="{% static 'account/images/users/avatar-9.jpg' %}" alt="Generic placeholder image" height="32">
+                                                <div>
+                                                    <h5 class="m-0">${message.comment_by}</h5>
+													
+                                                    <p class="text-muted mb-0"><small>${message.date_commented}</small></p>
+
+                                                    <p class="my-1">${message.comment}</p>
+<!--post comment ends here-->
+                                                    <div>
+													<!--post comment like and share button-->
+													
+												
+													
+                                                        <a href="javascript:like_comment(${message.comment_id});" class="btn btn-sm btn-link text-muted p-0">
+                                                            <i id="comment-like${message.comment_id}" class='uil uil-heart me-1'></i>
+															<span  id="like-count${message.comment_id}" >${message.comment_likes_count}</span> 
+															Like
+                                                        </a>
+                                                        <a href="javascript:open_reply(${message.comment_id});" class="btn btn-sm btn-link text-muted p-0 ps-2">
+                                                            <i class='uil uil-comments-alt me-1'></i> Reply
+                                                        </a>
+														<p class="pe-auto" onclick="open_reply(${message.comment_id})" id="view${message.comment_id}"><b>view previous ${message.reply_count} reply</b></p>
+                                                    </div>
+													<div id="reply${message.comment_id}" class="mt-3 d-none">
+													<div class="comment-area-box border">
+                                                <textarea rows="3"  class="form-control border-0 resize-none" placeholder="Your reply..."></textarea>
+                                                <div class="p-2 bg-light d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <!--post comment<a href="#" class="btn btn-sm px-1 btn-light"><i class='mdi mdi-upload'></i></a>-->
+                                                        
+                                                    </div>
+                                                    <button id ="" class="btn btn-sm btn-success"><i class='uil uil-message me-1'></i>Submit</button>
+                                                </div>
+                                            </div>
+													<!--post comment like and share button ends here-->
+													<!--post comment reply-->
+													<div id="reply-container${message.comment_id}">
+												<!-- end d-flex-->
+													</div>
+													<!--post comment reply ends here-->
+													 </div>
+															<!--reply comment div-->
+                                                    
+                                                </div> <!-- end div -->
+                                         
+
+                                           
+
+                                        </div>
+		
+		`
+		message_container.appendChild(div)
+		
+		
+	
+	
+	
+}
+
+
+
+
+
+
+
+//send comment to database and bring back other comments
+let message_send_btn = document.getElementById('comment-button');
+let message_input = document.getElementById('comment-input');
+let python_comments = document.getElementById('python-comments');
+function send_comment(){
+	let message = message_input.value
+	alert(message)
+	if (message === ''){
+		return;
+	}
+	message_input.value = ''
+	fetch("{% url 'ajaxcomment' %}",
+	
+	
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+	window.location.reload();
+		
+		
+	});
+}
+message_send_btn.addEventListener('click',send_comment);
+</script>
+<script>
+function delete_comment(id){
+	let message = id
+	alert(message)
+	
+	fetch("{% url 'deletecomment' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+	
+	
+		
+		for(message of messages){
+			
+			if(message.message=='success'){
+				window.location.reload();
+			}
+			
+		}
+	});
+}
+
+
+
+function open_reply(id) {
+	alert(id)
+message = id
+	fetch("{% url 'ajaxsinglecomment' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+	for(message of messages){
+		if (message.message == 'success'){
+			window.location.href = "{% url 'reply' %}";
+			}
+			}
+	});
+
+}
+
+
+function like_post(id) {
+	
+	
+let like_btnid = "post-like".concat(id)
+
+let like_btn = document.getElementById(like_btnid);
+
+
+let likecount = document.getElementById("likecount");
+	
+message = id
+	fetch("{% url 'ajaxlikepost' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+	for(message of messages){
+		if (message.message == 'success'){
+			like_btn.classList.toggle('text-danger');
+			likecount.innerHTML = message.count
+			}
+			}
+	});
+
+}
+
+
+
+
+function like_comment(id) {
+	alert(id)
+	
+let like_commentid = "comment-like".concat(id)
+let comment_like_count = "like-count".concat(id)
+
+let comment_like_btn = document.getElementById(like_commentid);
+
+let comment_likecount = document.getElementById(comment_like_count);
+	
+message = id
+	fetch("{% url 'ajaxlikecomment' %}",
+		{
+		method:'POST',
+		credentials:'same-origin',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken':'{{csrf_token}}',
+		},
+		body:JSON.stringify(message)
+		}
+	).then(e =>e.json()).then(messages =>{
+	for(message of messages){
+		
+		if (message.message == 'success'){
+			comment_like_btn.classList.toggle('text-danger');
+			comment_likecount.innerHTML = message.count
+			}
+			}
+	});
+
+}
+
+</script>
+
+{% endblock javascript %}    
